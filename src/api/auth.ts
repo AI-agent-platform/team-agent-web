@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3020';  
+const API_URL = 'http://localhost:4001';  
 
 export type LoginPayload = {
   email: string;
@@ -14,6 +14,7 @@ export type SignUpPayload = {
 
 export async function login(payload: LoginPayload) {
   const { data } = await axios.post(`${API_URL}/auth/login`, payload);
+  console.log("🚀 ~ login ~ data:", data)
   return data;
 }
 
