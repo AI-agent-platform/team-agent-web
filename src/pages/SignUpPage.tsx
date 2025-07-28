@@ -41,7 +41,7 @@ const SignUpPage: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/home');
+      navigate('/login');
     }
   }, [isSuccess, navigate]);
 

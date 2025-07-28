@@ -3,6 +3,7 @@ import AuthForm, { PageBackground, StyledInput } from "../components/AuthForm";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 const SwitchLink = styled.div`
   margin-top: 18px;
@@ -35,18 +36,28 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { mutate, isPending, isError, error, isSuccess } = useLogin();
+  const { login } = useAuth();
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/home");
-    }
-  }, [isSuccess, navigate]);
+  const [isPending, setIsPending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate({ email, password });
-  };
+    setIsPending(true);
+    setErrorMsg(null);
+
+    login(
+      { email, password },
+      () => {
+        setIsPending(false);
+        navigate("/home"); 
+      },
+      (err) => {
+        setIsPending(false);
+        setErrorMsg(err?.response?.data?.message || "Login failed");
+      }
+    );
+  }
 
   return (
     <PageBackground>
@@ -56,9 +67,9 @@ const LoginPage: React.FC = () => {
           onSubmit={handleSubmit}
           buttonText={isPending ? "Logging in..." : "Login"}
         >
-          {isError && (
+          {errorMsg && (
             <ErrorMsg>
-              {(error as any)?.response?.data?.message || "Login failed"}
+              {errorMsg}
             </ErrorMsg>
           )}
           <StyledInput
