@@ -6,6 +6,7 @@ import './App.css';
 import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
 import { ContactPage } from '@mui/icons-material';
 import AboutPage from './pages/AboutPage';
+import Intro from './pages/IntroPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/home" element={<HomePage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/intro" element={<Intro />} />
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
