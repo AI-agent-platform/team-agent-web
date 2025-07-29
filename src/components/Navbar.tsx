@@ -18,6 +18,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 import { User } from "lucide-react";
 import { Button } from "@mui/material";
 
@@ -53,11 +54,12 @@ const Navbar = () => {
       <div className="nav-logo-container">
         <img src={Logo} alt="" />
       </div>
-      <div className="navbar-links-container">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/testimonials">Testimonials</Link>
-        <Link to="/contact">Contact</Link>
+      <div className="navbar-links-container">      
+
+        <ScrollLink to="home" smooth={true} duration={500} offset={-100} >Home</ScrollLink>
+        <ScrollLink to="about" smooth={true} duration={500} offset={-100}>About</ScrollLink>
+        <ScrollLink to="contact" smooth={true} duration={500} offset={-80}>Contact</ScrollLink>
+
 
         {isUserLoggedIn && (
           <button className="primary-button">Create Agent</button>
