@@ -3,13 +3,15 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import HomePage from './pages/HomePage';
 import './App.css';
+import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
+
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/login" element={<AuthenticatedUserRedirect><LoginPage /></AuthenticatedUserRedirect>} />
+      <Route path="/signup" element={<AuthenticatedUserRedirect><SignUpPage /></AuthenticatedUserRedirect>} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 }

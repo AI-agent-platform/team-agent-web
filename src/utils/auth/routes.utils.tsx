@@ -10,4 +10,9 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
   return token ? <>{children}</> : <Navigate to="/login" />;
 };
 
+export const AuthenticatedUserRedirect = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('access_token');
+  return token ? <Navigate to="/home" /> : <>{children}</>;
+};
+
 export {}; 
