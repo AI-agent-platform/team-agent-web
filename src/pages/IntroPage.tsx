@@ -5,23 +5,21 @@ import { styled } from "styled-components";
 const Wrapper = styled.div`
   padding: 4rem 2rem;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #ffffffff;
 `;
 
 const Heading = styled.h1`
-  font-size: clamp(2rem, 5vw, 4rem);
-  color: #4c4c4c;
+  font-size: 3rem;
+  color: #400050ff;
   margin-bottom: 1.5rem;
 `;
 
 const Text = styled.p`
   font-size: clamp(1rem, 3vw, 1.5rem);
-  color:#6a6a6a;
+  color: #6a6a6a;
   line-height: 1.8;
   max-width: 800px;
   margin: 0 auto;
-
-
 `;
 
 const GridContainer = styled.div`
@@ -51,6 +49,10 @@ const GridItem = styled.div`
     color: #555;
   }
 `;
+const IntroWrapper = styled.div`
+  margin: 0rem 12rem;
+  background-color: #f9f9f9;
+`;
 const Intro = () => {
   return (
     <Wrapper>
@@ -65,12 +67,13 @@ const Intro = () => {
         dedicated teams—barriers that most SMEs cannot overcome. As a result,
         they miss out on the competitive advantages that AI can offer.
       </Text>
+
       <GridContainer>
         <GridItem>
           <img src="https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a539648a39d53dc75f_hh1.svg" />
 
           <div>
-            <p>
+            <p style={{fontWeight:'bold'}}>
               {" "}
               Traditional AI development requires coding skills, expensive
               tools, and dedicated teams—barriers that most SMEs cannot
@@ -82,7 +85,7 @@ const Intro = () => {
         <GridItem>
           <img src="https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a5580c5ed45b5b671a_hh2.svg" />
           <div style={{ textAlign: "center" }}>
-            <p>
+            <p style={{fontWeight:'bold'}}>
               {" "}
               Traditional AI development requires coding skills, expensive
               tools, and dedicated teams—barriers that most SMEs cannot
@@ -94,7 +97,7 @@ const Intro = () => {
         <GridItem>
           <img src="https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a5ad1c0c20dd8997f7_hh3.svg" />
           <div>
-            <p>
+            <p style={{fontWeight:'bold'}}>
               {" "}
               Traditional AI development requires coding skills, expensive
               tools, and dedicated teams—barriers that most SMEs cannot
