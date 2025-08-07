@@ -24,9 +24,9 @@ import { Button } from "@mui/material";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
-  const {isUserLoggedIn, logout} = useAuth();
+  const { isUserLoggedIn, logout } = useAuth();
   const Navigate = useNavigate();
-  
+
   const menuOptions = [
     {
       text: "Home",
@@ -54,31 +54,53 @@ const Navbar = () => {
       <div className="nav-logo-container">
         <img src={Logo} alt="" />
       </div>
-      <div className="navbar-links-container">      
-
-        <ScrollLink to="home" smooth={true} duration={500} offset={-100} >Home</ScrollLink>
-        <ScrollLink to="about" smooth={true} duration={500} offset={-100}>About</ScrollLink>
-        <ScrollLink to="contact" smooth={true} duration={500} offset={-80}>Contact</ScrollLink>
-
+      <div className="navbar-links-container">
+        <ScrollLink
+          style={{ cursor: "pointer" }}
+          to="home"
+          smooth={true}
+          duration={500}
+          offset={-100}
+        >
+          Home
+        </ScrollLink>
+        <ScrollLink
+          style={{ cursor: "pointer" }}
+          to="about"
+          smooth={true}
+          duration={500}
+          offset={-100}
+        >
+          About
+        </ScrollLink>
+        <ScrollLink
+          style={{ cursor: "pointer" }}
+          to="contact"
+          smooth={true}
+          duration={500}
+          offset={-80}
+        >
+          Contact
+        </ScrollLink>
 
         {isUserLoggedIn && (
-          <button className="primary-button">Create Agent</button>
+          <ScrollLink className="primary-button">Create Agent</ScrollLink>
         )}
-         <a href="">
-         {/* <BsCart2 className="navbar-cart-icon" /> */}
-        </a>
+
         {isUserLoggedIn ? (
-          <button onClick={logout} className="primary-button">Logout</button>
+          <ScrollLink onClick={logout} >
+            Logout
+          </ScrollLink>
         ) : (
-          <button onClick={() => Navigate('/login')} className="primary-button">Login</button>
+          <ScrollLink onClick={() => Navigate("/login")}style={{ cursor: "pointer" }} >
+            Login
+          </ScrollLink>
         )}
-       
-       
       </div>
       <div className="navbar-menu-container">
         {/* <HiOutlineBars3 onClick={() => setOpenMenu(true)} /> */}
       </div>
-      <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
+      {/* <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
         <Box
           sx={{ width: 250 }}
           role="presentation"
@@ -97,7 +119,7 @@ const Navbar = () => {
           </List>
           <Divider />
         </Box>
-      </Drawer>
+      </Drawer> */}
     </nav>
   );
 };
