@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
         <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="bg" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(216, 219, 18, 0.6)" />
+              <stop offset="0%" stopColor="rgba(101, 0, 121, 0.6)" />
               <stop offset="100%" stopColor="rgba(38, 89, 190, 0.06)" />
             </linearGradient>
             <path
