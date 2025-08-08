@@ -53,24 +53,24 @@ const Home = () => {
           /> 
         </div>  */}
         <>
-          <FadeInWhenVisible>
-            <div className="home-text-section">
-              <h1 className="primary-heading">What We Offer</h1>
-              {/* <p className="primary-text">
+          <div className="home-text-section">
+            <h1 className="primary-heading">What We Offer</h1>
+            {/* <p className="primary-text">
                 Build AI agents that connect with your APIs, learn from your
                 data, and grow with your users.
               </p> */}
-              {/* <ScrollLink to="about" smooth={true} duration={500} offset={-80}>
+            {/* <ScrollLink to="about" smooth={true} duration={500} offset={-80}>
                 <button className="secondary-button">Learn More</button>
               </ScrollLink> */}
-            </div>
+          </div>
+          <FadeInWhenVisible duration={0.4}>
             <GridContainer>
               <GridItem>
                 <div
                   style={{
                     backgroundColor: "white",
                     width: "30rem",
-                    height: "30rem",                    
+                    height: "30rem",
                   }}
                 ></div>
               </GridItem>
@@ -79,7 +79,7 @@ const Home = () => {
                   style={{
                     backgroundColor: "white",
                     width: "30rem",
-                    height: "30rem",                   
+                    height: "30rem",
                   }}
                 ></div>
               </GridItem>
