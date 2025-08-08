@@ -7,9 +7,10 @@ import { ReactNode } from "react";
 interface FadeInWhenVisibleProps {
   children: ReactNode;
   delay?: number;
+  duration?:number;
 }
 
-const FadeInWhenVisible = ({ children, delay = 0 }: FadeInWhenVisibleProps) => {
+const FadeInWhenVisible = ({ children, delay,duration = 1.6 }: FadeInWhenVisibleProps) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
 
@@ -26,7 +27,7 @@ const FadeInWhenVisible = ({ children, delay = 0 }: FadeInWhenVisibleProps) => {
       ref={ref}
       initial="hidden"
       animate={controls}
-      transition={{ duration: 1.6, delay }}
+      transition={{ duration: duration, delay }}
       variants={{
         visible: { opacity: 1, y: 0 },
         hidden: { opacity: 0, y: 50 },
