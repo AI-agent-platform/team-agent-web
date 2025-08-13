@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <FadeInWhenVisible>
       <div className="contact-page-wrapper" id="contact">
-        <h1 className="primary-heading">Let’s Build Something Together</h1>
+        <h1 className="primary-heading" style={{color:"black"}}>Let’s Build Something Together</h1>
         <p
           className="primary-text"
           style={{ textAlign: "center", maxWidth: "600px" }}
