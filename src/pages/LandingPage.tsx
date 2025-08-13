@@ -1,7 +1,7 @@
 // HeroSection.js
 import React from "react";
 import styled from "styled-components";
-import FadeInWhenVisible from "../components/FramerMotion";
+import { FadeInWhenVisible } from "../components/FramerMotion";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import HomePage from "./HomePage";
@@ -10,10 +10,13 @@ import Intro from "./IntroPage";
 import About from "./AboutPage";
 import Contact from "./ContactPage";
 import Footer from "../components/Footer";
-import { ScrollLink } from "react-scroll";
+import { Link as ScrollLink } from "react-scroll";
+import BackgroundImg from "../Assets/background-assets/a.webp";
+import TechSlider from "../components/TechSlider";
+import Areas from "./AreasPage";
 
 const HeroBackground = styled.section`
-  background-image: url("https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/67064e1a1f9aff637e161e76_Beta%20Launch%20New%20Hero.webp");
+  background-image: url(${BackgroundImg});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -46,24 +49,8 @@ const HeroSubtitle = styled.p`
   }
 `;
 
-const HeroButton = styled.button`
-  margin-top: 2rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: #00ffd1;
-  color: black;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-
-  &:hover {
-    background: white;
-    color: black;
-  }
-`;
-
 const Button = styled.button`
+  margin-top: 2rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   background-color: #00ffd1;
@@ -71,7 +58,7 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease;
 
   &:hover {
     background-color: white;
@@ -103,6 +90,7 @@ const HeroPage = () => {
           </ScrollLink>
         </FadeInWhenVisible>
       </HeroBackground>
+
       <ChatWidget />
 
       <section id="intro">
@@ -110,6 +98,11 @@ const HeroPage = () => {
       </section>
       <section id="home">
         <HomePage />
+      </section>
+      <TechSlider />
+
+      <section id="area">
+        <Areas />
       </section>
 
       <section id="about">
