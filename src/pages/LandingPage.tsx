@@ -14,6 +14,8 @@ import { Link as ScrollLink } from "react-scroll";
 import BackgroundImg from "../Assets/background-assets/a.webp";
 import TechSlider from "../components/TechSlider";
 import Areas from "./AreasPage";
+import WhyUse from "./WhyUsPage";
+import WhyUs from "./WhyUsPage";
 
 const HeroBackground = styled.section`
   background-image: url(${BackgroundImg});
@@ -96,7 +98,7 @@ const HeroPage = () => {
       <section id="intro">
         <Intro />
       </section>
-      <section id="home">
+      <section id="what-we-offer">
         <HomePage />
       </section>
       <TechSlider />
@@ -105,13 +107,17 @@ const HeroPage = () => {
         <Areas />
       </section>
 
-      <section id="about">
-        <About />
+      <section id="why">
+        <WhyUs />
       </section>
 
+      {/* <section id="about">
+        <About />
+      </section> */}
+{/* 
       <section id="contact">
         <Contact />
-      </section>
+      </section> */}
 
       <Footer />
     </>

@@ -29,6 +29,7 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   padding: 2rem;
+  align-items: start; /* ✅ prevents other cards from stretching when one grows */
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -48,10 +49,11 @@ const GridItem = styled(motion.div)`
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  align-self: start; /* ✅ ensures independent height */
 
   &:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    background-color: #ecfdf5; /* matching hover color */
+    background-color: #ecfdf5;
   }
 
   img {
@@ -79,6 +81,7 @@ const GridItem = styled(motion.div)`
     opacity: 1;
   }
 `;
+
 
 const imageVariant = {
   hidden: { opacity: 0, y: 50 },
