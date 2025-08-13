@@ -129,7 +129,7 @@ nav {
   background-color: #e48f0f;
 }
 .about-section-container {
-  background-color:#ecfdf5;
+  background-color:#ffffff;
   position: relative;
   display: flex;
   align-items: center;
@@ -186,7 +186,7 @@ nav {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 20rem;
+
   margin-left: 4rem;
   margin-right: 4rem;
 }

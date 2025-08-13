@@ -44,21 +44,21 @@ const Navbar = () => {
         </ScrollLink>
         <ScrollLink
           style={{ cursor: "pointer" }}
-          to="about"
+          to="what-we-offer"
           smooth={true}
           duration={500}
           offset={-100}
         >
-          About
+          Dual Agent
         </ScrollLink>
         <ScrollLink
           style={{ cursor: "pointer" }}
-          to="contact"
+          to="why"
           smooth={true}
           duration={500}
           offset={-80}
         >
-          Contact
+          Why Us
         </ScrollLink>
 
         {isUserLoggedIn && (
