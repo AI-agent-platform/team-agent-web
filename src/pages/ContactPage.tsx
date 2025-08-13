@@ -1,5 +1,5 @@
 import React from "react";
-import FadeInWhenVisible from "../components/FramerMotion";
+import {FadeInWhenVisible} from "../components/FramerMotion";
 
 const Contact = () => {
   return (

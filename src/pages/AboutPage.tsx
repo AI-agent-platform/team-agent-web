@@ -1,6 +1,6 @@
 import React from "react";
 import RobotImage from "../Assets/robot.png";
-import FadeInWhenVisible from "../components/FramerMotion";
+import {FadeInWhenVisible} from "../components/FramerMotion";
 
 const About = () => {
   return (
@@ -10,16 +10,16 @@ const About = () => {
           <img src={RobotImage} alt="About AI Agent" />
         </div>
         <div className="about-section-text-container">
-          <p className="primary-subheading">About Us</p>
-          <h1 className="primary-heading">
+          <p className="primary-subheading" style={{color:"#0fcb8c", fontSize:"3rem",marginBottom:"1rem"}}>About Us</p>
+          <h1 className="primary-heading" style={{color:"#163c3d",fontSize:"3rem"}}>
             Empowering SMEs with Smart AI Agents
           </h1>
           <p className="primary-text">
-            We help small and medium enterprises harness the power of AI by
+            We are final year students of Faculty of Engineering university of Ruhuna and we help small and medium enterprises harness the power of AI by
             enabling them to build, train, and deploy custom agents tailored to
             their business processes—without writing a single line of code.
           </p>
-          <div className="about-buttons-container">
+          {/* <div className="about-buttons-container">
             <button className="secondary-button">Learn More</button>
             <button className="watch-video-button">
               <svg
@@ -38,7 +38,7 @@ const About = () => {
               </svg>
               Watch Demo
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </FadeInWhenVisible>
