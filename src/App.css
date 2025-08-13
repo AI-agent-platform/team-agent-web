@@ -19,7 +19,7 @@ body {
   overflow-x: hidden;
 }
 .home-container {
-  background-color: #23002c;
+  background-color: #163c3d;
   padding-left: 50px;
   padding-right: 50px;
   padding-bottom: 150px;
@@ -129,7 +129,7 @@ nav {
   background-color: #e48f0f;
 }
 .about-section-container {
-  background-color: rgb(242, 210, 250);
+  background-color:#ecfdf5;
   position: relative;
   display: flex;
   align-items: center;
