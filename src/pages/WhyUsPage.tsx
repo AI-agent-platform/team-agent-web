@@ -6,11 +6,29 @@ const Wrapper = styled.div`
   padding: 4rem 6rem;
   text-align: left;
   background-color: #ecfdf5;
+
+  @media (max-width: 1024px) {
+    padding: 2rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 1rem;
+    text-align: left;
+  }
 `;
+
 const SubWrapper = styled.div`
   padding: 4rem 2rem;
   text-align: left;
-  background-color: #ffffffff;
+  background-color: #ffffff;
+
+  @media (max-width: 1024px) {
+    padding: 3rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 const Heading = styled.h1`
@@ -108,7 +126,6 @@ const GridItem = styled.div`
     text-align: center;
   }
 `;
-
 
 const WhyUs = () => {
   const advantages = [
