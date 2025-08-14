@@ -29,13 +29,21 @@ const Navbar = () => {
 
   return (
     <nav>
-      <div className="nav-logo-container">
-        <img src={Logo} alt="" />
-      </div>
+      <ScrollLink
+        style={{ cursor: "pointer" }}
+        to="hero"
+        smooth={true}
+        duration={500}
+        offset={-100}
+      >
+        <div className="nav-logo-container">
+          <img src={Logo} alt="" />
+        </div>
+      </ScrollLink>
       <div className="navbar-links-container">
         <ScrollLink
           style={{ cursor: "pointer" }}
-          to="home"
+          to="hero"
           smooth={true}
           duration={500}
           offset={-100}
@@ -61,9 +69,7 @@ const Navbar = () => {
           Why Us
         </ScrollLink>
 
-        {isUserLoggedIn && (
-          <ScrollLink >Create Agent</ScrollLink>
-        )}
+        {isUserLoggedIn && <ScrollLink>Create Agent</ScrollLink>}
 
         {isUserLoggedIn ? (
           <ScrollLink onClick={logout}>Logout</ScrollLink>

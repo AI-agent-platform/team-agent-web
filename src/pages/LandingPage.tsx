@@ -108,13 +108,15 @@ const HeroPage = () => {
   return (
     <>
       <Navbar />
-      <HeroBackground>
-        <FadeInWhenVisible>
-          <HeroTitle>Build Your AI Agent with Ease</HeroTitle>
-          <HeroSubtitle>
-            No code. No hassle. Just results. Create chatbots that actually work
-            with your business.
-          </HeroSubtitle>
+      <section id="hero">
+        <HeroBackground>
+          <FadeInWhenVisible>
+            <HeroTitle>Build Your AI Agent with Ease</HeroTitle>
+            <HeroSubtitle>
+              No code. No hassle. Just results. Create chatbots that actually
+              work with your business.
+            </HeroSubtitle>
+          </FadeInWhenVisible>
           <ScrollLink
             style={{ cursor: "pointer" }}
             to="intro"
@@ -129,8 +131,8 @@ const HeroPage = () => {
               <div className="scroll-text">Scroll</div>
             </MouseScroll>
           </ScrollLink>
-        </FadeInWhenVisible>
-      </HeroBackground>
+        </HeroBackground>
+      </section>
 
       <ChatWidget />
 
