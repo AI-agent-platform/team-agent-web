@@ -89,7 +89,7 @@ const GridItem = styled.div`
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    color: #400050ff;
+    color: #434343ff;
     transition: all 0.4s ease;
   }
 

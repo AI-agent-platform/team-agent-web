@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 
 const Heading = styled.h1`
   font-size: 3rem;
-  color: #000000ff;
+  color: #0fcb8c;
   margin-bottom: 1.5rem;
 `;
 

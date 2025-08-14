@@ -45,32 +45,66 @@ const HeroTitle = styled.h1`
 const HeroSubtitle = styled.p`
   font-size: 1.25rem;
   max-width: 600px;
+  margin-bottom: 8rem;
 
   @media (min-width: 768px) {
     font-size: 1.5rem;
   }
 `;
 
-const Button = styled.button`
+const MouseScroll = styled.div`
   margin-top: 2rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background-color: #00ffd1;
-  color: black;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  &:hover {
-    background-color: white;
-    color: black;
+  .mouse {
+    width: 40px;
+    height: 70px;
+    border: 3px solid white;
+    border-radius: 25px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wheel {
+    width: 5px;
+    height: 12px;
+    background: black; /* black wheel */
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    animation: wheelMove 1.5s infinite;
+  }
+
+  @keyframes wheelMove {
+    0% {
+      opacity: 1;
+      top: 10px;
+    }
+    50% {
+      opacity: 0;
+      top: 25px;
+    }
+    100% {
+      opacity: 1;
+      top: 10px;
+    }
+  }
+
+  .scroll-text {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: white;
+    text-transform: uppercase;
+    opacity: 0.8;
   }
 `;
 
 const HeroPage = () => {
-  const navigate = useNavigate();
-
   return (
     <>
       <Navbar />
@@ -83,12 +117,17 @@ const HeroPage = () => {
           </HeroSubtitle>
           <ScrollLink
             style={{ cursor: "pointer" }}
-            to="contact"
+            to="intro"
             smooth={true}
             duration={500}
             offset={-80}
           >
-            <Button>Get Started</Button>
+            <MouseScroll>
+              <div className="mouse">
+                <div className="wheel"></div>
+              </div>
+              <div className="scroll-text">Scroll</div>
+            </MouseScroll>
           </ScrollLink>
         </FadeInWhenVisible>
       </HeroBackground>
@@ -114,7 +153,7 @@ const HeroPage = () => {
       {/* <section id="about">
         <About />
       </section> */}
-{/* 
+      {/* 
       <section id="contact">
         <Contact />
       </section> */}
