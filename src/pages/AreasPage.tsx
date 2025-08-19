@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import AgricultureImg from "../Assets/areas/aggriculture.jpg";
-import TransportationImg from "../Assets/areas/transpotation.jpg";
+import ecom from "../Assets/areas/ecom.jpg";
 import TourismImg from "../Assets/areas/tourism.jpg";
 import { FadeInWhenVisible } from "../components/FramerMotion";
 
@@ -135,7 +135,7 @@ const Areas = () => {
     },
     {
       title: "Transportation",
-      img: TransportationImg,
+      img: ecom,
       details:
         "Transportation AI improves route optimization, fleet management, predictive maintenance, and logistics efficiency.",
     },
