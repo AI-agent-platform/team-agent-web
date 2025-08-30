@@ -1,8 +1,8 @@
 // HeroSection.js
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { FadeInWhenVisible } from "../components/FramerMotion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import HomePage from "./HomePage";
 import ChatWidget from "../components/ChatWidget";
@@ -105,6 +105,20 @@ const MouseScroll = styled.div`
 `;
 
 const HeroPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Handle hash navigation
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location.hash]);
+
   return (
     <>
       <Navbar />
@@ -152,13 +166,13 @@ const HeroPage = () => {
         <WhyUs />
       </section>
 
-      {/* <section id="about">
+      <section id="about">
         <About />
-      </section> */}
-      {/* 
+      </section>
+      
       <section id="contact">
         <Contact />
-      </section> */}
+      </section>
 
       <Footer />
     </>
