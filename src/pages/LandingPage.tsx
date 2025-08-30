@@ -166,13 +166,13 @@ const HeroPage = () => {
         <WhyUs />
       </section>
 
-      <section id="about">
+      {/* <section id="about">
         <About />
       </section>
       
       <section id="contact">
         <Contact />
-      </section>
+      </section> */}
 
       <Footer />
     </>
