@@ -3,10 +3,11 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import OwnerAgentPage from './pages/OwnerAgentPage';
 import CustomerAgentPage from './pages/CustomerAgentPage';
+import AgriculturePage from './pages/AgriculturePage';
+import TourismPage from './pages/TourismPage';
+import EcommercePage from './pages/EcommercePage';
 import './App.css';
 import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
-import AboutPage from './pages/AboutPage';
-import Intro from './pages/IntroPage';
 import HeroPage from './pages/LandingPage';
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
       <Route path="/home" element={<Navigate to="/landing#what-we-offer" replace />} />
       <Route path="/owner-agent" element={<OwnerAgentPage />} />
       <Route path="/customer-agent" element={<CustomerAgentPage />} />
+      <Route path="/agriculture" element={<AgriculturePage />} />
+      <Route path="/tourism" element={<TourismPage />} />
+      <Route path="/e-commerce" element={<EcommercePage />} />
       <Route path="/landing" element={<HeroPage />} />
       <Route path="/contact" element={<Navigate to="/landing#contact" replace />} />
       <Route path="/about" element={<Navigate to="/landing#about" replace />} />
