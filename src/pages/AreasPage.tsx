@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import AgricultureImg from "../Assets/areas/aggriculture.jpg";
 import ecom from "../Assets/areas/ecom.jpg";
 import TourismImg from "../Assets/areas/tourism.jpg";
@@ -126,6 +127,8 @@ const itemVariant = {
 };
 
 const Areas = () => {
+  const navigate = useNavigate();
+  
   const items = [
     {
       title: "Agriculture",
@@ -134,10 +137,10 @@ const Areas = () => {
         "AI solutions for agriculture help optimize crop yields, monitor soil conditions, and automate irrigation systems.",
     },
     {
-      title: "Transportation",
+      title: "E-commerce",
       img: ecom,
       details:
-        "Transportation AI improves route optimization, fleet management, predictive maintenance, and logistics efficiency.",
+        "E-commerce AI enhances customer experience, optimizes inventory, and provides personalized shopping recommendations.",
     },
     {
       title: "Tourism",
@@ -166,6 +169,10 @@ const Areas = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
+              onClick={() => {
+                const route = item.title.toLowerCase().replace(/\s+/g, '-');
+                navigate(`/${route}`);
+              }}
             >
               <img src={item.img} alt={item.title} />
               <div className="overlay">

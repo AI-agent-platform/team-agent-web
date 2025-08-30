@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import CustomerAgentImg from "../Assets/what-we-offer/customer-agent.jpg";
+import CustomerAgentImg from "../Assets/what-we-offer/customer.jpg";
 
 const PageContainer = styled.div`
   min-height: 100vh;
