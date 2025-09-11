@@ -50,6 +50,12 @@ const Navbar = () => {
         >
           Home
         </ScrollLink>
+        <Button
+          style={{ cursor: "pointer" }}
+          onClick={() => Navigate("/create-agent")}
+        >
+          Create Agents
+        </Button>
         <ScrollLink
           style={{ cursor: "pointer" }}
           to="what-we-offer"
