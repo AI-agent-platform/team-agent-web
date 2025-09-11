@@ -9,6 +9,7 @@ import EcommercePage from './pages/EcommercePage';
 import './App.css';
 import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
 import HeroPage from './pages/LandingPage';
+import CreateAgent from './pages/CreatAgent';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/tourism" element={<TourismPage />} />
       <Route path="/e-commerce" element={<EcommercePage />} />
       <Route path="/landing" element={<HeroPage />} />
+      <Route path="/create-agent" element={<CreateAgent />} />
       <Route path="/contact" element={<Navigate to="/landing#contact" replace />} />
       <Route path="/about" element={<Navigate to="/landing#about" replace />} />
       <Route path="/intro" element={<Navigate to="/landing#intro" replace />} />
