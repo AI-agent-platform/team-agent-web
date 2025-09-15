@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useLogin, useSignUp } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { LocalLoginReturn } from '../api/dto/auth.dto';
-import { LoginPayload } from '../api/auth';
+import { LoginPayload } from '../api/auth-api';
 
 interface AuthContextType {
   isUserLoggedIn: boolean;

@@ -1,314 +1,313 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  useCreateBusiness,
+  useSelectField,
+  useUploadFile,
+  useCreateDualAgents,
+  useMyBusiness,
+} from "../hooks/useAgents";
+import { BusinessType } from "../constants/business-types.enum";
 
-// ---------------------- Styled Components ----------------------
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  height: 100vh;
-  background: #f8fafc;
+// --- Styled Components ---
+const WizardContainer = styled.div`
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f0f4ff, #ffffff);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: "Roboto", sans-serif;
 `;
 
-const Sidebar = styled.div`
-  background: linear-gradient(180deg, #1e293b, #0f172a);
-  color: #fff;
-  padding: 20px;
+const StepContent = styled.div`
+  margin: 20px 0;
   display: flex;
   flex-direction: column;
-`;
-
-const Step = styled.div<{ active?: boolean }>`
-  display: flex;
   align-items: center;
-  margin-bottom: 18px;
-  font-weight: ${p => (p.active ? 700 : 400)};
-  opacity: ${p => (p.active ? 1 : 0.65)};
-  font-size: 13px;
+
+  input[type="text"],
+  input[type="email"],
+  input[type="file"] {
+    width: 80%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: 0.3s;
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+  }
 `;
 
-const Dot = styled.div<{ active?: boolean }>`
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  margin-right: 10px;
-  background: ${p => (p.active ? "#34d399" : "rgba(255,255,255,0.18)")};
-`;
-
-const Main = styled.div`
-  padding: 40px;
-  overflow-y: auto;
-`;
-
-const Card = styled.div`
-  background: #fff;
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  max-width: 640px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 16px;
-`;
-
-const Input = styled.input`
+const FieldsSelection = styled.div`
+  display: flex;
+  justify-content: space-around;
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #d0d7e2;
-  font-size: 15px;
-  margin-bottom: 20px;
+  margin-top: 20px;
 
-  &:focus {
-    border-color: #4f46e5;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  .field-card {
+    flex: 1;
+    padding: 20px;
+    margin: 0 10px;
+    border-radius: 12px;
+    border: 2px solid #ddd;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333;
+    &:hover {
+      border-color: #4caf50;
+      background-color: #e8f5e9;
+    }
+    &.selected {
+      border-color: #4caf50;
+      background-color: #c8e6c9;
+    }
   }
 `;
 
-const Button = styled.button<{ variant?: "ghost" | "solid" }>`
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: ${p =>
-    p.variant === "ghost"
-      ? "transparent"
-      : "linear-gradient(90deg,#4f46e5,#6dd3ff)"};
-  border: ${p => (p.variant === "ghost" ? "1px solid #e6eef8" : "none")};
-  color: ${p => (p.variant === "ghost" ? "#0f172a" : "#fff")};
-  font-weight: 600;
-  cursor: pointer;
-  margin-right: 10px;
+const WizardButtons = styled.div`
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: default;
+  button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .back {
+    background-color: #ccc;
+    color: #333;
+  }
+
+  .next {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .next:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
   }
 `;
 
-const ProgressWrapper = styled.div`
-  background: #e6eef8;
-  height: 8px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  overflow: hidden;
+const ProgressBar = styled.div`
+  display: flex;
+  margin-top: 40px;
+  justify-content: space-between;
 `;
 
-const Bar = styled.div<{ width: number }>`
-  height: 100%;
-  width: ${p => p.width || 0}%;
-  background: linear-gradient(90deg, #6dd3ff, #4f46e5);
-  transition: width 360ms ease;
+const ProgressStep = styled.div<{ active: boolean }>`
+  flex: 1;
+  height: 10px;
+  margin: 0 4px;
+  border-radius: 5px;
+  background-color: ${(props) => (props.active ? "#4caf50" : "#ddd")};
+  transition: 0.3s;
 `;
 
-const FileUpload = styled.input`
-  margin-top: 16px;
-`;
-
-// ---------------------- Component ----------------------
-
-const CreateAgent: React.FC = () => {
+// --- Component ---
+const CreateAgents: React.FC = () => {
   const [step, setStep] = useState(0);
-  const [companyName, setCompanyName] = useState("");
-  const [contact, setContact] = useState("");
-  const [email, setEmail] = useState("");
-  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
-  const [processing, setProcessing] = useState(false);
-  const [adminUrl, setAdminUrl] = useState<string | null>(null);
-  const [clientUrl, setClientUrl] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+    email: "",
+    uid: "",
+    field: "",
+    files: [] as File[],
+  });
+  const token = localStorage.getItem("access_token");
+  const { mutate: createBusiness } = useCreateBusiness(token!);
+  const { mutate: uploadFile } = useUploadFile();
+  const { mutate: createDualAgents } = useCreateDualAgents();
+  const { mutate: fetchMyBusiness } = useMyBusiness(token!);
 
-  const fileRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    fetchMyBusiness(undefined, {
+      onSuccess: (res) => {
+        if (!res.data) return;
+        const business = res.data;
+        setFormData({
+          ...formData,
+          name: business.name || "",
+          contact: business.contact || "",
+          email: business.email || "",
+          uid: business._id || "",
+          field: business.field || "",
+        });
 
-  // Steps
-  const steps = [
-    "Company Name",
-    "Contact",
-    "Email",
-    "Business Details",
-    "File Upload",
-    "Dual Agents",
-  ];
+        const firstIncomplete = [0, 1, 2, 3, 4, 5].find(
+          (s) => !res.completedSteps.includes(s)
+        );
+        setStep(firstIncomplete ?? 6);
+      },
+    });
+  }, []);
 
-  // CSRF token getter
-  const getCsrfToken = () => {
-    const cookies = document.cookie.split(";");
-    for (let cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === "csrftoken") return value;
+  const handleNext = () => {
+    if (step === 3) {
+      // After field selection step
+      createBusiness(
+        {
+          name: formData.name,
+          contact: formData.contact,
+          email: formData.email,
+          field: formData.field, 
+        },
+        {
+          onSuccess: (res) => {
+            setFormData({ ...formData, uid: res.uid });
+            setStep(step + 1);
+          },
+        }
+      );
+    } else if (step === 4) {
+      const file = formData.files[0];
+      if (file) {
+        uploadFile(
+          {
+            uid: formData.uid,
+            companyName: formData.name,
+            field: formData.field,
+            file,
+          },
+          { onSuccess: () => setStep(step + 1) }
+        );
+      }
+    } else if (step === 5) {
+      createDualAgents(
+        { uid: formData.uid, field: formData.field },
+        {
+          onSuccess: (res) => {
+            alert(
+              `Agents created!\nAdmin: ${res.adminUrl}\nClient: ${res.clientUrl}`
+            );
+            setStep(step + 1);
+          },
+        }
+      );
+    } else {
+      setStep(step + 1);
     }
-    return "";
   };
 
-  // ---------------------- Handlers ----------------------
-
-  const handleNext = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep(step + 1);
+  const handleBack = () => {
+    if (step > 0) setStep(step - 1);
   };
 
-  const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const file = ev.target.files?.[0];
-    setFileToUpload(file || null);
-  };
-
-  const handleFileUpload = async () => {
-    if (!fileToUpload) return;
-
-    setProcessing(true);
-
-    const formData = new FormData();
-    formData.append("company_name", companyName);
-    formData.append("contact", contact);
-    formData.append("email", email);
-    formData.append("file", fileToUpload);
-
-    try {
-      const res = await fetch("http://127.0.0.1:8000/chat/api/upload-file/", {
-        method: "POST",
-        headers: { "X-CSRFToken": getCsrfToken() },
-        body: formData,
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      setAdminUrl(data.admin_url);
-      setClientUrl(data.client_url);
-      setStep(5);
-    } finally {
-      setProcessing(false);
+  const renderStep = () => {
+    switch (step) {
+      case 0:
+        return (
+          <input
+            type="text"
+            placeholder="Name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+        );
+      case 1:
+        return (
+          <input
+            type="text"
+            placeholder="Contact"
+            value={formData.contact}
+            onChange={(e) =>
+              setFormData({ ...formData, contact: e.target.value })
+            }
+          />
+        );
+      case 2:
+        return (
+          <input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          />
+        );
+      case 3:
+        return (
+          <FieldsSelection>
+            {Object.values(BusinessType).map((fieldOption) => (
+              <div
+                key={fieldOption}
+                className={`field-card ${
+                  formData.field === fieldOption ? "selected" : ""
+                }`}
+                onClick={() => setFormData({ ...formData, field: fieldOption })}
+              >
+                {fieldOption.charAt(0).toUpperCase() + fieldOption.slice(1)}
+              </div>
+            ))}
+          </FieldsSelection>
+        );
+      case 4:
+        return (
+          <input
+            type="file"
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                files: e.target.files ? Array.from(e.target.files) : [],
+              })
+            }
+          />
+        );
+      case 5:
+        return (
+          <p>
+            Ready to create dual agents for UID: <b>{formData.uid}</b>
+          </p>
+        );
+      default:
+        return <p>🎉 Setup complete!</p>;
     }
   };
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Copied!");
-    } catch (err) {
-      console.error("Failed to copy", err);
-    }
-  };
-
-  // ---------------------- Render ----------------------
-
   return (
-    <Wrapper>
-      <Sidebar>
-        {steps.map((label, i) => (
-          <Step key={i} active={i === step}>
-            <Dot active={i === step} />
-            {label}
-          </Step>
+    <WizardContainer>
+      <h2>Step {step + 1} / 5</h2>
+      <StepContent>{renderStep()}</StepContent>
+      <WizardButtons>
+        {step < 3 && step > 0 && <button onClick={handleBack}>Back</button>}
+        {step <= 4 && (
+          <button
+            className="next"
+            onClick={handleNext}
+            disabled={step === 3 && !formData.field} // must select field
+          >
+            Next
+          </button>
+        )}
+      </WizardButtons>
+      <ProgressBar>
+        {[...Array(5)].map((_, i) => (
+          <ProgressStep key={i} active={i <= step} />
         ))}
-      </Sidebar>
-
-      <Main>
-        <Card>
-          <ProgressWrapper>
-            <Bar width={(step / (steps.length - 1)) * 100} />
-          </ProgressWrapper>
-
-          {/* Step 0 - Company Name */}
-          {step === 0 && (
-            <form onSubmit={handleNext}>
-              <Title>Enter Company Name</Title>
-              <Input
-                value={companyName}
-                onChange={e => setCompanyName(e.target.value)}
-                required
-              />
-              <Button type="submit">Next</Button>
-            </form>
-          )}
-
-          {/* Step 1 - Contact */}
-          {step === 1 && (
-            <form onSubmit={handleNext}>
-              <Title>Enter Contact Number</Title>
-              <Input
-                value={contact}
-                onChange={e => setContact(e.target.value)}
-                required
-              />
-              <Button type="submit">Next</Button>
-            </form>
-          )}
-
-          {/* Step 2 - Email */}
-          {step === 2 && (
-            <form onSubmit={handleNext}>
-              <Title>Enter Email</Title>
-              <Input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-              <Button type="submit">Next</Button>
-            </form>
-          )}
-
-          {/* Step 3 - Business Details */}
-          {step === 3 && (
-            <>
-              <Title>Provide Business Details</Title>
-              <p>Some optional extra details can go here...</p>
-              <Button onClick={() => setStep(4)}>Next</Button>
-            </>
-          )}
-
-          {/* Step 4 - File Upload */}
-          {step === 4 && (
-            <>
-              <Title>Upload Business Data</Title>
-              <FileUpload
-                ref={fileRef}
-                type="file"
-                accept=".csv,.xlsx,.xls,.pdf,.docx,.txt"
-                onChange={handleFileChange}
-              />
-              <Button onClick={handleFileUpload} disabled={!fileToUpload || processing}>
-                {processing ? "Uploading..." : "Upload & Finish"}
-              </Button>
-            </>
-          )}
-
-          {/* Step 5 - Show URLs */}
-          {step === 5 && (
-            <>
-              <Title>Your Agents Are Ready</Title>
-              <p>
-                🎩 Business Owner Agent:{" "}
-                <a href={adminUrl || "#"} target="_blank">
-                  {adminUrl}
-                </a>
-                <Button
-                  variant="ghost"
-                  onClick={() => copyToClipboard(adminUrl || "")}
-                >
-                  Copy
-                </Button>
-              </p>
-              <p>
-                🤝 Customer Agent:{" "}
-                <a href={clientUrl || "#"} target="_blank">
-                  {clientUrl}
-                </a>
-                <Button
-                  variant="ghost"
-                  onClick={() => copyToClipboard(clientUrl || "")}
-                >
-                  Copy
-                </Button>
-              </p>
-            </>
-          )}
-        </Card>
-      </Main>
-    </Wrapper>
+      </ProgressBar>
+    </WizardContainer>
   );
 };
 
-export default CreateAgent;
+export default CreateAgents;
