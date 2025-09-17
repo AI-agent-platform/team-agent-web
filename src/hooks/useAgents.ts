@@ -32,7 +32,7 @@ export function useAnswerFieldQuestion() {
 }
 
 // Upload file
-export function useUploadFile() {
+export function useUploadFile(token: string) {
   return useMutation<any, any, FileUploadPayload>({
     mutationFn: uploadFile,
   });

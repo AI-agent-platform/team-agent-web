@@ -36,6 +36,7 @@ export type AddMoreDataPayload = {
 };
 
 export type DualAgentsPayload = {
+  action:string;
   uid: string;
   field: string;
 };

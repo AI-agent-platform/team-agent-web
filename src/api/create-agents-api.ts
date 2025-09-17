@@ -33,16 +33,24 @@ export async function answerFieldQuestion(payload: FieldAnswerPayload) {
   return data;
 }
 
-export async function uploadFile(payload: FileUploadPayload) {
+export async function uploadFile(payload: FileUploadPayload, token?: string) {
+  
   const formData = new FormData();
   formData.append("file", payload.file);
   formData.append("uid", payload.uid);
   formData.append("companyName", payload.companyName);
   formData.append("field", payload.field);
 
-  const { data } = await axios.post(`${API_URL}/files/upload`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axios.post(
+    `http://127.0.0.1:8000/chat/api/upload-file/`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return data;
 }
 
@@ -52,7 +60,7 @@ export async function addMoreData(payload: AddMoreDataPayload) {
 }
 
 export async function createDualAgents(payload: DualAgentsPayload) {
-  const { data } = await axios.post(`${API_URL}/agents/create-dual`, payload);
+  const { data } = await axios.post(`http://127.0.0.1:8000/chat/api/`, payload);
   return data;
 }
 

@@ -127,6 +127,7 @@ const ProgressStep = styled.div<{ active: boolean }>`
 // --- Component ---
 const CreateAgents: React.FC = () => {
   const [step, setStep] = useState(0);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
@@ -137,7 +138,7 @@ const CreateAgents: React.FC = () => {
   });
   const token = localStorage.getItem("access_token");
   const { mutate: createBusiness } = useCreateBusiness(token!);
-  const { mutate: uploadFile } = useUploadFile();
+  const { mutate: uploadFile } = useUploadFile(token!);
   const { mutate: createDualAgents } = useCreateDualAgents();
   const { mutate: fetchMyBusiness } = useMyBusiness(token!);
 
@@ -171,7 +172,7 @@ const CreateAgents: React.FC = () => {
           name: formData.name,
           contact: formData.contact,
           email: formData.email,
-          field: formData.field, 
+          field: formData.field,
         },
         {
           onSuccess: (res) => {
@@ -183,6 +184,7 @@ const CreateAgents: React.FC = () => {
     } else if (step === 4) {
       const file = formData.files[0];
       if (file) {
+        setLoadingMessage("Uploading file..."); // show loader
         uploadFile(
           {
             uid: formData.uid,
@@ -190,21 +192,33 @@ const CreateAgents: React.FC = () => {
             field: formData.field,
             file,
           },
-          { onSuccess: () => setStep(step + 1) }
+          {
+            onSuccess: () => {
+              setLoadingMessage("Creating agents..."); // show loader for agent creation
+              createDualAgents(
+                {
+                  action: "dual_agents_confirm",
+                  uid: formData.uid,
+                  field: formData.field,
+                },
+                {
+                  onSuccess: (res) => {
+                    setLoadingMessage(null); // hide loader
+                    alert(
+                      `Agents created!\nAdmin: ${res.adminUrl}\nClient: ${res.clientUrl}`
+                    );
+                    setStep(step + 1); // move to final confirmation step
+                  },
+                }
+              );
+            },
+            onError: () => {
+              setLoadingMessage(null);
+              alert("File upload failed. Please try again.");
+            },
+          }
         );
       }
-    } else if (step === 5) {
-      createDualAgents(
-        { uid: formData.uid, field: formData.field },
-        {
-          onSuccess: (res) => {
-            alert(
-              `Agents created!\nAdmin: ${res.adminUrl}\nClient: ${res.clientUrl}`
-            );
-            setStep(step + 1);
-          },
-        }
-      );
     } else {
       setStep(step + 1);
     }
