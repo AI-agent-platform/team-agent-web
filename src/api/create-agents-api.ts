@@ -6,7 +6,7 @@ import {
   FieldAnswerPayload,
   FieldSelectPayload,
   FileUploadPayload,
-} from "./dto/auth.dto";
+} from "./dto/agent.dto";
 
 const API_URL = "http://localhost:4001/business";
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   useCreateBusiness,
-  useSelectField,
   useUploadFile,
   useCreateDualAgents,
   useMyBusiness,
@@ -43,6 +42,32 @@ const StepContent = styled.div`
       box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
     }
   }
+
+  /* Styles for the create-agents button placed here so it applies when the button is rendered inside StepContent */
+  .create-agents {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    margin-top: 8px;
+  }
+
+  .create-agents:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(76, 175, 80, 0.22);
+  }
+
+  .create-agents:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
 `;
 
 const FieldsSelection = styled.div`
@@ -63,13 +88,15 @@ const FieldsSelection = styled.div`
     text-transform: uppercase;
     font-weight: bold;
     color: #333;
+
     &:hover {
-      border-color: #4caf50;
-      background-color: #e8f5e9;
+      border-color: #2196f3;
+      background-color: #e3f2fd;
     }
+
     &.selected {
-      border-color: #4caf50;
-      background-color: #c8e6c9;
+      border-color: #2196f3;
+      background-color: #bbdefb;
     }
   }
 `;
@@ -88,8 +115,12 @@ const WizardButtons = styled.div`
     cursor: pointer;
     font-weight: bold;
     transition: 0.2s;
-    &:hover {
+    &:hover:enabled {
       opacity: 0.9;
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   }
 
@@ -99,13 +130,18 @@ const WizardButtons = styled.div`
   }
 
   .next {
-    background-color: #4caf50;
+    background-color: #2196f3;
     color: white;
   }
 
-  .next:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
+  /* keep create-agents here as well for safety if you ever render it inside the button area */
+  .create-agents {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 14px 28px;
+    font-size: 17px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
   }
 `;
 
@@ -120,9 +156,46 @@ const ProgressStep = styled.div<{ active: boolean }>`
   height: 10px;
   margin: 0 4px;
   border-radius: 5px;
-  background-color: ${(props) => (props.active ? "#4caf50" : "#ddd")};
+  background-color: ${(props) => (props.active ? "#2196f3" : "#ddd")};
   transition: 0.3s;
 `;
+
+const LoadingText = styled.p`
+  color: #ff7f50;
+  font-weight: bold;
+  margin: 10px 0;
+`;
+
+// --- Toasts ---
+const slideIn = keyframes`
+  0% { transform: translateY(-100%); opacity: 0 }
+  100% { transform: translateY(0); opacity: 1 }
+`;
+
+const ToastContainer = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+`;
+
+const Toast = styled.div<{ type: "success" | "error" }>`
+  min-width: 250px;
+  margin-bottom: 10px;
+  padding: 15px 20px;
+  color: #fff;
+  background-color: ${(props) =>
+    props.type === "success" ? "#4caf50" : "#f44336"};
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: ${slideIn} 0.3s ease forwards;
+`;
+
+interface ToastMessage {
+  id: number;
+  message: string;
+  type: "success" | "error";
+}
 
 // --- Component ---
 const CreateAgents: React.FC = () => {
@@ -136,12 +209,16 @@ const CreateAgents: React.FC = () => {
     field: "",
     files: [] as File[],
   });
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
   const token = localStorage.getItem("access_token");
   const { mutate: createBusiness } = useCreateBusiness(token!);
   const { mutate: uploadFile } = useUploadFile(token!);
   const { mutate: createDualAgents } = useCreateDualAgents();
   const { mutate: fetchMyBusiness } = useMyBusiness(token!);
 
+  // Fetch existing business info
   useEffect(() => {
     fetchMyBusiness(undefined, {
       onSuccess: (res) => {
@@ -152,8 +229,9 @@ const CreateAgents: React.FC = () => {
           name: business.name || "",
           contact: business.contact || "",
           email: business.email || "",
-          uid: business._id || "",
+          uid: business.ownerUid || "",
           field: business.field || "",
+          files: [],
         });
 
         const firstIncomplete = [0, 1, 2, 3, 4, 5].find(
@@ -162,11 +240,29 @@ const CreateAgents: React.FC = () => {
         setStep(firstIncomplete ?? 6);
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const addToast = (message: string, type: "success" | "error") => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  };
+
+  // --- Step navigation ---
   const handleNext = () => {
+    setButtonsDisabled(true);
+
     if (step === 3) {
-      // After field selection step
+      // --- Business creation ---
+      if (!formData.field) {
+        addToast("Please select a field!", "error");
+        setButtonsDisabled(false);
+        return;
+      }
+      setLoadingMessage("Creating your business...");
       createBusiness(
         {
           name: formData.name,
@@ -176,51 +272,53 @@ const CreateAgents: React.FC = () => {
         },
         {
           onSuccess: (res) => {
-            setFormData({ ...formData, uid: res.uid });
+            setFormData({ ...formData });
+            setLoadingMessage(null);
+            addToast("Business created successfully!", "success");
             setStep(step + 1);
+            setButtonsDisabled(false);
+          },
+          onError: () => {
+            setLoadingMessage(null);
+            addToast("Failed to create business.", "error");
+            setButtonsDisabled(false);
           },
         }
       );
     } else if (step === 4) {
+      // --- File upload only ---
       const file = formData.files[0];
-      if (file) {
-        setLoadingMessage("Uploading file..."); // show loader
-        uploadFile(
-          {
-            uid: formData.uid,
-            companyName: formData.name,
-            field: formData.field,
-            file,
-          },
-          {
-            onSuccess: () => {
-              setLoadingMessage("Creating agents..."); // show loader for agent creation
-              createDualAgents(
-                {
-                  action: "dual_agents_confirm",
-                  uid: formData.uid,
-                  field: formData.field,
-                },
-                {
-                  onSuccess: (res) => {
-                    setLoadingMessage(null); // hide loader
-                    alert(
-                      `Agents created!\nAdmin: ${res.adminUrl}\nClient: ${res.clientUrl}`
-                    );
-                    setStep(step + 1); // move to final confirmation step
-                  },
-                }
-              );
-            },
-            onError: () => {
-              setLoadingMessage(null);
-              alert("File upload failed. Please try again.");
-            },
-          }
-        );
+      if (!file) {
+        addToast("Please select a file to upload.", "error");
+        setButtonsDisabled(false);
+        return;
       }
+
+      setLoadingMessage("Uploading file...");
+      uploadFile(
+        {
+          uid: formData.uid,
+          companyName: formData.name,
+          field: formData.field,
+          file,
+        },
+        {
+          onSuccess: () => {
+            setLoadingMessage(null);
+            addToast("File uploaded successfully!", "success");
+            setStep(step + 1); // Go to step 5
+            setButtonsDisabled(false);
+          },
+          onError: () => {
+            setLoadingMessage(null);
+            addToast("File upload failed.", "error");
+            setButtonsDisabled(false);
+          },
+        }
+      );
     } else {
       setStep(step + 1);
+      setButtonsDisabled(false);
     }
   };
 
@@ -228,6 +326,35 @@ const CreateAgents: React.FC = () => {
     if (step > 0) setStep(step - 1);
   };
 
+  // --- Agent creation ---
+  const handleCreateAgents = () => {
+    setButtonsDisabled(true);
+    setLoadingMessage("Creating dual agents...");
+
+    createDualAgents(
+      {
+        action: "dual_agents_confirm",
+        uid: formData.uid,
+        company_name: formData.name,
+        field: formData.field,
+      },
+      {
+        onSuccess: () => {
+          setLoadingMessage(null);
+          addToast("Dual agents created successfully!", "success");
+          setStep(step + 1);
+          setButtonsDisabled(false);
+        },
+        onError: () => {
+          setLoadingMessage(null);
+          addToast("Failed to create agents.", "error");
+          setButtonsDisabled(false);
+        },
+      }
+    );
+  };
+
+  // --- Render steps ---
   const renderStep = () => {
     switch (step) {
       case 0:
@@ -290,36 +417,64 @@ const CreateAgents: React.FC = () => {
           />
         );
       case 5:
+        // Step 6 (index 5): ONLY render the create-agents button (no other text, no back button)
         return (
-          <p>
-            Ready to create dual agents for UID: <b>{formData.uid}</b>
-          </p>
+          <button
+            className="create-agents"
+            onClick={handleCreateAgents}
+            disabled={buttonsDisabled}
+          >
+            {buttonsDisabled ? "Creating Agents..." : "Create Agents"}
+          </button>
         );
       default:
         return <p>🎉 Setup complete!</p>;
     }
   };
+
   return (
     <WizardContainer>
-      <h2>Step {step + 1} / 5</h2>
-      <StepContent>{renderStep()}</StepContent>
+      <h2>Step {step + 1} / 6</h2>
+      <StepContent>
+        {renderStep()}
+
+        {loadingMessage && step !== 5 && (
+          <LoadingText>{loadingMessage}</LoadingText>
+        )}
+      </StepContent>
       <WizardButtons>
-        {step < 3 && step > 0 && <button onClick={handleBack}>Back</button>}
+        {step > 0 && step < 4 && (
+          <button
+            className="back"
+            onClick={handleBack}
+            disabled={buttonsDisabled}
+          >
+            Back
+          </button>
+        )}
         {step <= 4 && (
           <button
             className="next"
             onClick={handleNext}
-            disabled={step === 3 && !formData.field} // must select field
+            disabled={buttonsDisabled || (step === 3 && !formData.field)}
           >
             Next
           </button>
         )}
       </WizardButtons>
       <ProgressBar>
-        {[...Array(5)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <ProgressStep key={i} active={i <= step} />
         ))}
       </ProgressBar>
+
+      <ToastContainer>
+        {toasts.map((toast) => (
+          <Toast key={toast.id} type={toast.type}>
+            {toast.message}
+          </Toast>
+        ))}
+      </ToastContainer>
     </WizardContainer>
   );
 };
