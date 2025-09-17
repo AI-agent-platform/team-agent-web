@@ -8,7 +8,7 @@ import {
   createDualAgents, 
   fetchMyBusiness,
 } from "../api/create-agents-api";
-import { AddMoreDataPayload, CreateUserPayload, DualAgentsPayload, FieldAnswerPayload, FieldSelectPayload, FileUploadPayload } from "../api/dto/auth.dto";
+import { AddMoreDataPayload, CreateUserPayload, DualAgentsPayload, FieldAnswerPayload, FieldSelectPayload, FileUploadPayload } from "../api/dto/agent.dto";
 
 // User creation
 export function useCreateBusiness(token: string) {
