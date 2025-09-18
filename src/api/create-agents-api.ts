@@ -8,7 +8,10 @@ import {
   FileUploadPayload,
 } from "./dto/agent.dto";
 
-const API_URL = "http://localhost:4001/business";
+
+const NestBaseUrl = process.env.REACT_APP_NEST_API;
+const API_URL = `${NestBaseUrl}/business`;
+const DjangoBaseUrl = process.env.REACT_APP_DJANGO_API;
 
 // ---------- API Functions ----------
 export async function createBusiness(
@@ -42,7 +45,7 @@ export async function uploadFile(payload: FileUploadPayload, token?: string) {
   formData.append("field", payload.field);
 
   const { data } = await axios.post(
-    `http://127.0.0.1:8000/chat/api/upload-file/`,
+    `${DjangoBaseUrl}/upload-file/`,   
     formData,
     {
       headers: {
@@ -60,7 +63,7 @@ export async function addMoreData(payload: AddMoreDataPayload) {
 }
 
 export async function createDualAgents(payload: DualAgentsPayload) {
-  const { data } = await axios.post(`http://127.0.0.1:8000/chat/api/`, payload);
+  const { data } = await axios.post(`${DjangoBaseUrl}/`, payload);
   return data;
 }
 

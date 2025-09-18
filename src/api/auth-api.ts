@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:4001';  
+const API_URL = process.env.REACT_APP_NEST_API;
 
 export type LoginPayload = {
   email: string;
@@ -13,8 +13,7 @@ export type SignUpPayload = {
 };
 
 export async function login(payload: LoginPayload) {
-  const { data } = await axios.post(`${API_URL}/auth/login`, payload);
-  console.log("🚀 ~ login ~ data:", data)
+  const { data } = await axios.post(`${API_URL}/auth/login`, payload);  
   return data;
 }
 
