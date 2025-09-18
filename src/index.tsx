@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
 import { AuthProvider } from "./context/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import ToastWrapper from "./components/ToastWrapper";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ root.render(
           <GlobalStyle />
           <AuthProvider>
             <App />
+            <ToastWrapper />
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
