@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const googleLogin = async (token: string) => {
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_NEST_API}/auth/google-login`,
+        `${process.env.REACT_APP_NEST_API}/auth/google-auth`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw err;
     }
   };
+  
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
