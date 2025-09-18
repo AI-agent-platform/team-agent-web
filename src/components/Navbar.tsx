@@ -84,7 +84,7 @@ const Navbar = () => {
         )}
 
         {isUserLoggedIn ? (
-          <ScrollLink onClick={logout}>Logout</ScrollLink>
+          <ScrollLink style={{ cursor: "pointer" }} onClick={logout}>Logout</ScrollLink>
         ) : (
           <ScrollLink
             onClick={() => Navigate("/login")}
