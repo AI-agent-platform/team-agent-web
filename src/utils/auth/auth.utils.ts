@@ -21,3 +21,20 @@ export const storeIsNewUser = (isNewUser: boolean) => {
 export const getIsNewUser = (): boolean => {
   return localStorage.getItem("isNewUser") === "true";
 };
+
+export const validatePassword = (password: string): string | null => {
+  const minLength = 6;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (
+    password.length < minLength ||
+    (!hasUppercase && !hasLowercase && !hasNumber && !hasSpecialChar)
+  ) {
+    return "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character";
+  }
+
+  return null;
+};

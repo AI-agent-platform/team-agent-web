@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { SlideInFromSide } from "../components/FramerMotion";
+import { useNavigate } from "react-router-dom";
 import OwnerAgentImg from "../Assets/what-we-offer/owner-agent.jpg";
 import CustomerAgentImg from "../Assets/what-we-offer/customer-agent.jpg";
 
@@ -120,6 +121,8 @@ const Overlay = styled.div`
 `;
 
 const Home = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="home-container">
       <div className="home-banner-container" id="home">
@@ -146,6 +149,7 @@ const Home = () => {
             <SectionHalf
               className="left-section"
               style={{ backgroundImage: `url(${OwnerAgentImg})` }}
+              onClick={() => navigate('/owner-agent')}
             >
               <Overlay>
                 <h2>Owner Agent</h2>
@@ -162,6 +166,7 @@ const Home = () => {
             <SectionHalf
               className="right-section"
               style={{ backgroundImage: `url(${CustomerAgentImg})` }}
+              onClick={() => navigate('/customer-agent')}
             >
               <Overlay>
                 <h2>Customer Agent</h2>

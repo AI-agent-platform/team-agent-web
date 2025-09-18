@@ -1,3 +1,3 @@
-export interface LocalLoginReturn{
-    access_token: string;
+export interface LocalLoginReturn {
+  access_token: string;
 }

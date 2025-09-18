@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import AuthForm, { PageBackground, StyledInput } from '../components/AuthForm';
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSignUp } from '../hooks/useAuth';
+import React, { useState, useEffect } from "react";
+import AuthForm, { PageBackground, StyledInput } from "../components/AuthForm";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import { useSignUp } from "../hooks/useAuth";
+import { validatePassword } from "../utils/auth/auth.utils";
 
 const SwitchLink = styled.div`
   margin-top: 18px;
@@ -32,24 +33,31 @@ const ErrorMsg = styled.div`
 `;
 
 const SignUpPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [localError, setLocalError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [localError, setLocalError] = useState("");
   const navigate = useNavigate();
   const { mutate, isPending, isError, error, isSuccess } = useSignUp();
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [isSuccess, navigate]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLocalError('');
+    setLocalError("");
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setLocalError(passwordError);
+      return;
+    }
+    
     if (password !== confirmPassword) {
-      setLocalError('Passwords do not match');
+      setLocalError("Passwords do not match");
       return;
     }
     mutate({ email, password });
@@ -61,30 +69,34 @@ const SignUpPage: React.FC = () => {
         <AuthForm
           title="Sign Up"
           onSubmit={handleSubmit}
-          buttonText={isPending ? 'Creating...' : 'Create Account'}
+          buttonText={isPending ? "Creating..." : "Create Account"}
         >
           {(localError || isError) && (
-            <ErrorMsg>{localError || (error as any)?.response?.data?.message || 'Sign up failed'}</ErrorMsg>
+            <ErrorMsg>
+              {localError ||
+                (error as any)?.response?.data?.message ||
+                "Sign up failed"}
+            </ErrorMsg>
           )}
           <StyledInput
             type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <StyledInput
             type="password"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <StyledInput
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </AuthForm>
@@ -96,4 +108,4 @@ const SignUpPage: React.FC = () => {
   );
 };
 
-export default SignUpPage; 
+export default SignUpPage;

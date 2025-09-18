@@ -50,6 +50,7 @@ const Navbar = () => {
         >
           Home
         </ScrollLink>
+
         <ScrollLink
           style={{ cursor: "pointer" }}
           to="what-we-offer"
@@ -69,7 +70,18 @@ const Navbar = () => {
           Why Us
         </ScrollLink>
 
-        {isUserLoggedIn && <ScrollLink>Create Agent</ScrollLink>}
+        {isUserLoggedIn && (
+          <ScrollLink
+            style={{ cursor: "pointer" }}
+            to="hero"
+            smooth={true}
+            duration={500}
+            offset={-100}
+            onClick={() => Navigate("/create-agent")}
+          >
+            Create Agent
+          </ScrollLink>
+        )}
 
         {isUserLoggedIn ? (
           <ScrollLink onClick={logout}>Logout</ScrollLink>
