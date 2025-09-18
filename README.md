@@ -2,6 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### env file
+Paste below code inside env file
+
+```
+
+REACT_APP_NEST_API = http://localhost:4001
+REACT_APP_DJANGO_API = http://127.0.0.1:8000/chat/api
+REACT_APP_GOOGLE_CLIENT_ID = 209610564722-q116gajb7ei7spl3uglvfqigffk6jcv3.apps.googleusercontent.com
+```
 ## Available Scripts
 
 In the project directory, you can run:
