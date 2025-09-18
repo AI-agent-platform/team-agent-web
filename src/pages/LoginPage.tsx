@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useAuth";
 import { useAuth } from "../context/AuthContext";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const SwitchLink = styled.div`
   margin-top: 18px;
@@ -36,7 +37,7 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
 
   const [isPending, setIsPending] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -50,14 +51,24 @@ const LoginPage: React.FC = () => {
       { email, password },
       () => {
         setIsPending(false);
-        navigate("/home"); 
+        navigate("/landing");
       },
       (err) => {
         setIsPending(false);
         setErrorMsg(err?.response?.data?.message || "Login failed");
       }
     );
-  }
+  };
+
+  const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+    if (!credentialResponse.credential) return;
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate("/landing");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <PageBackground>
@@ -67,11 +78,7 @@ const LoginPage: React.FC = () => {
           onSubmit={handleSubmit}
           buttonText={isPending ? "Logging in..." : "Login"}
         >
-          {errorMsg && (
-            <ErrorMsg>
-              {errorMsg}
-            </ErrorMsg>
-          )}
+          {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
           <StyledInput
             type="email"
             placeholder="Email"
@@ -86,7 +93,12 @@ const LoginPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => console.log("Login Failed")}
+          />
         </AuthForm>
+
         <SwitchLink>
           Don't have an account? <Link to="/signup">Sign Up</Link>
         </SwitchLink>
