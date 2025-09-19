@@ -7,6 +7,10 @@ import {
   useMyBusiness,
 } from "../hooks/useAgents";
 import { BusinessType } from "../constants/business-types.enum";
+import {
+  validateContact,
+  validateEmail,
+} from "../utils/auth/inputValidators.utils";
 
 // --- Styled Components ---
 const WizardContainer = styled.div`
@@ -211,7 +215,9 @@ const CreateAgents: React.FC = () => {
   });
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
-
+  const [errors, setErrors] = useState<{ email?: string; contact?: string }>(
+    {}
+  );
   const token = localStorage.getItem("access_token");
   const { mutate: createBusiness } = useCreateBusiness(token!);
   const { mutate: uploadFile } = useUploadFile(token!);
@@ -278,9 +284,15 @@ const CreateAgents: React.FC = () => {
             setStep(step + 1);
             setButtonsDisabled(false);
           },
-          onError: () => {
+          onError: (err) => {
             setLoadingMessage(null);
-            addToast("Failed to create business.", "error");
+            const message =
+              err.response?.data?.message ||
+              err.response?.data?.detail ||
+              err.message ||
+              "Business creation failed.";
+
+            addToast(message, "error");
             setButtonsDisabled(false);
           },
         }
@@ -372,9 +384,16 @@ const CreateAgents: React.FC = () => {
             type="text"
             placeholder="Contact"
             value={formData.contact}
-            onChange={(e) =>
-              setFormData({ ...formData, contact: e.target.value })
-            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setFormData({ ...formData, contact: value });
+              setErrors({
+                ...errors,
+                contact: validateContact(value)
+                  ? ""
+                  : "Contact number must be at least 7 characters",
+              });
+            }}
           />
         );
       case 2:
@@ -383,9 +402,14 @@ const CreateAgents: React.FC = () => {
             type="email"
             placeholder="Email"
             value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setFormData({ ...formData, email: value });
+              setErrors({
+                ...errors,
+                email: validateEmail(value) ? "" : "Invalid email format",
+              });
+            }}
           />
         );
       case 3:
@@ -404,31 +428,38 @@ const CreateAgents: React.FC = () => {
             ))}
           </FieldsSelection>
         );
+      //   case 4:
+      //     return (
+      //       <input
+      //         type="file"
+      //         onChange={(e) =>
+      //           setFormData({
+      //             ...formData,
+      //             files: e.target.files ? Array.from(e.target.files) : [],
+      //           })
+      //         }
+      //       />
+      //     );
+      //   case 5:
+      //     // Step 6 (index 5): ONLY render the create-agents button (no other text, no back button)
+      //     return (
+      //       <button
+      //         className="create-agents"
+      //         onClick={handleCreateAgents}
+      //         disabled={buttonsDisabled}
+      //       >
+      //         {buttonsDisabled ? "Creating Agents..." : "Create Agents"}
+      //       </button>
+      //     );
       case 4:
         return (
-          <input
-            type="file"
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                files: e.target.files ? Array.from(e.target.files) : [],
-              })
-            }
-          />
+          <p>🎉 Setup completed! You will get user guide through your email</p>
         );
-      case 5:
-        // Step 6 (index 5): ONLY render the create-agents button (no other text, no back button)
-        return (
-          <button
-            className="create-agents"
-            onClick={handleCreateAgents}
-            disabled={buttonsDisabled}
-          >
-            {buttonsDisabled ? "Creating Agents..." : "Create Agents"}
-          </button>
-        );
+
       default:
-        return <p>🎉 Setup complete!</p>;
+        return (
+          <p>🎉 Setup completed! You will get user guide through your email</p>
+        );
     }
   };
 
@@ -452,18 +483,23 @@ const CreateAgents: React.FC = () => {
             Back
           </button>
         )}
-        {step <= 4 && (
+        {step <= 3 && (
           <button
             className="next"
             onClick={handleNext}
-            disabled={buttonsDisabled || (step === 3 && !formData.field)}
+            disabled={
+              buttonsDisabled ||
+              (step === 3 && !formData.field) ||
+              (step === 1 && !!errors.contact) ||
+              (step === 2 && !!errors.email)
+            }
           >
             Next
           </button>
         )}
       </WizardButtons>
       <ProgressBar>
-        {[...Array(6)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <ProgressStep key={i} active={i <= step} />
         ))}
       </ProgressBar>

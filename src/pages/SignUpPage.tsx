@@ -61,7 +61,7 @@ const Button = styled.button<{ disabled?: boolean }>`
   cursor: pointer;
   transition: all 0.3s;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
-  
+
   &:hover {
     transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
@@ -127,7 +127,21 @@ const SignUpPage: React.FC = () => {
       return;
     }
 
-    mutate({ email, password });
+    mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          toast.success("Account created! Please log in.");
+          navigate("/login");
+        },
+        onError: (err: any) => {
+          const errorMessage =
+            err?.response?.data?.message || err?.message || "Sign up failed";
+          setLocalError(errorMessage);
+          toast.error(errorMessage);
+        },
+      }
+    );
   };
 
   const handleGoogleSignUp = async (credentialResponse: CredentialResponse) => {
