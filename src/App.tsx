@@ -10,25 +10,29 @@ import './App.css';
 import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
 import HeroPage from './pages/LandingPage';
 import CreateAgent from './pages/CreatAgent';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<AuthenticatedUserRedirect><LoginPage /></AuthenticatedUserRedirect>} />
-      <Route path="/signup" element={<AuthenticatedUserRedirect><SignUpPage /></AuthenticatedUserRedirect>} />
-      <Route path="/home" element={<Navigate to="/landing#what-we-offer" replace />} />
-      <Route path="/owner-agent" element={<OwnerAgentPage />} />
-      <Route path="/customer-agent" element={<CustomerAgentPage />} />
-      <Route path="/agriculture" element={<AgriculturePage />} />
-      <Route path="/tourism" element={<TourismPage />} />
-      <Route path="/e-commerce" element={<EcommercePage />} />
-      <Route path="/landing" element={<HeroPage />} />
-      <Route path="/create-agent" element={<CreateAgent />} />
-      <Route path="/contact" element={<Navigate to="/landing#contact" replace />} />
-      <Route path="/about" element={<Navigate to="/landing#about" replace />} />
-      <Route path="/intro" element={<Navigate to="/landing#intro" replace />} />
-      <Route path="*" element={<Navigate to="/landing" replace />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/login" element={<AuthenticatedUserRedirect><LoginPage /></AuthenticatedUserRedirect>} />
+        <Route path="/signup" element={<AuthenticatedUserRedirect><SignUpPage /></AuthenticatedUserRedirect>} />
+        <Route path="/home" element={<Navigate to="/landing#what-we-offer" replace />} />
+        <Route path="/owner-agent" element={<OwnerAgentPage />} />
+        <Route path="/customer-agent" element={<CustomerAgentPage />} />
+        <Route path="/agriculture" element={<AgriculturePage />} />
+        <Route path="/tourism" element={<TourismPage />} />
+        <Route path="/e-commerce" element={<EcommercePage />} />
+        <Route path="/landing" element={<HeroPage />} />
+        <Route path="/create-agent" element={<CreateAgent />} />
+        <Route path="/contact" element={<Navigate to="/landing#contact" replace />} />
+        <Route path="/about" element={<Navigate to="/landing#about" replace />} />
+        <Route path="/intro" element={<Navigate to="/landing#intro" replace />} />
+        <Route path="*" element={<Navigate to="/landing" replace />} />
+      </Routes>
+    </>
   );
 }
 

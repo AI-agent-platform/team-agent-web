@@ -284,7 +284,7 @@ const Particle = styled(motion.div)`
   background: #0fcb8c;
   border-radius: 50%;
 `;
-
+ 
 const OwnerAgentPage = () => {
   const navigate = useNavigate();
   const [particles] = useState(Array.from({ length: 20 }, (_, i) => i));
