@@ -11,6 +11,7 @@ import { AuthenticatedUserRedirect } from './utils/auth/routes.utils';
 import HeroPage from './pages/LandingPage';
 import CreateAgent from './pages/CreatAgent';
 import ScrollToTop from './components/ScrollToTop';
+import Footer from './components/Footer';
 
 function App() {
   return (
