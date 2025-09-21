@@ -3,415 +3,300 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import EcommerceImg from "../Assets/areas/ecom.jpg";
+import ShoppingImg from "../Assets/areas/ecommerce.jpg";
 
 const PageContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+`;
+const SideImage = styled.img`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;      
+  height: 50%;
+  object-fit: cover;
+  opacity: 0.9;    
+  border-radius: 0 0 0 0; /* optional curve */
+  z-index: 0;
+  @media (max-width: 768px) {
+  height: 35%;
+}
+@media (max-width: 480px) {
+  height: 25%;
+}
+
 `;
 
-const Header = styled(motion.header)`
+const MainCard = styled.div`
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   position: relative;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(rgba(102, 126, 234, 0.6), rgba(118, 75, 162, 0.6)),
-    url(${EcommerceImg});
+  @media (max-width: 768px) {
+  border-radius: 12px;
+}
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #667eea;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    background: #f093fb;
+    color: #000;
+  }
+  @media (max-width: 480px) {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+}
+`;
+
+const HeaderSection = styled.div`
+  position: relative;
+  height: 200px;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url(${ShoppingImg});
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
-`;
-
-const HeaderContent = styled.div`
-  text-align: center;
-  color: white;
-  z-index: 2;
-  max-width: 900px;
-  padding: 0 2rem;
-`;
-
-const Title = styled(motion.h1)`
-  font-size: clamp(4rem, 10vw, 8rem);
-  font-weight: 900;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #00d4ff, #0099cc, #667eea);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
-  letter-spacing: -1px;
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: clamp(1.3rem, 4vw, 2rem);
-  margin-bottom: 2rem;
-  opacity: 0.95;
-  line-height: 1.5;
-  font-weight: 300;
-`;
-
-const BackButton = styled(motion.button)`
-  position: fixed;
-  top: 2rem;
-  left: 2rem;
-  background: rgba(0, 212, 255, 0.2);
-  border: 2px solid #00d4ff;
-  color: #00d4ff;
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 600;
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-  z-index: 1000;
-
-  &:hover {
-    background: #00d4ff;
-    color: #000;
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
-  }
-`;
-
-const MainContent = styled.main`
-  padding: 6rem 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-`;
-
-const Section = styled(motion.section)`
-  margin-bottom: 8rem;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: clamp(3rem, 6vw, 5rem);
-  color: #00d4ff;
-  margin-bottom: 4rem;
-  text-align: center;
-  position: relative;
-  font-weight: 800;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 6px;
-    background: linear-gradient(45deg, #00d4ff, #667eea);
-    border-radius: 3px;
-  }
-`;
-
-const HexagonalGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-  
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const FeatureCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(0, 212, 255, 0.3);
-  border-radius: 20px;
-  padding: 2.5rem;
-  backdrop-filter: blur(20px);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(102, 126, 234, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(from 0deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-    animation: rotate 8s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  &:hover {
-    transform: translateY(-15px) rotateX(10deg) rotateY(10deg);
-    border-color: #00d4ff;
-    box-shadow: 0 25px 50px rgba(0, 212, 255, 0.3);
-
-    &::before {
-      opacity: 1;
-    }
-
-    &::after {
-      opacity: 1;
-    }
-  }
-`;
-
-const FeatureIcon = styled.div`
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(45deg, #00d4ff, #667eea);
-  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+
+  @media (max-width: 480px) {
+  height: 150px;
+}
+`;
+
+const ContentSection = styled.div`
+  padding: 2rem;
+  @media (max-width: 768px) {
+  padding: 1.2rem;
+  }
+  @media (max-width: 480px) {
+    padding: 1rem;
+}
+`;
+
+const Title = styled.h1`
   font-size: 2.5rem;
-  color: white;
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-  position: relative;
-  z-index: 1;
-  transform: translateZ(20px);
-`;
-
-const FeatureTitle = styled.h3`
-  font-size: 1.8rem;
-  color: #00d4ff;
-  margin-bottom: 1.5rem;
   font-weight: 700;
-  position: relative;
-  z-index: 1;
-  transform: translateZ(15px);
-`;
-
-const FeatureDescription = styled.p`
-  color: #f0f0f0;
-  line-height: 1.7;
-  font-size: 1.1rem;
-  font-weight: 300;
-  position: relative;
-  z-index: 1;
-  transform: translateZ(10px);
-`;
-
-const StatsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin: 4rem 0;
-`;
-
-const StatCard = styled(motion.div)`
+  color: #111827;
+  margin-bottom: 1rem;
   text-align: center;
-  padding: 3rem 2rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  border: 2px solid rgba(0, 212, 255, 0.2);
+  @media (max-width: 768px) {
+  font-size: 2rem;
+}
+@media (max-width: 480px) {
+  font-size: 1.6rem;
+}
+`;
+
+const Description = styled.p`
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  text-align: center;
+`;
+
+const TabContainer = styled.div`
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+`;
+
+const TabList = styled.div`
+  display: flex;
+  gap: 0;
+`;
+
+const Tab = styled.button<{ $active?: boolean }>`
+  background: none;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: ${props => props.$active ? '#667eea' : '#6b7280'};
+  border-bottom: 2px solid ${props => props.$active ? '#667eea' : 'transparent'};
+  cursor: pointer;
+  
+  &:hover {
+    color: #667eea;
+  }
+  @media (max-width: 480px) {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+`;
+
+const TabContent = styled(motion.div)`
+  min-height: 400px;
+`;
+
+const Section = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const ListItem = styled.li`
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  padding-left: 1rem;
   position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(15px);
-
-  &::before {
-    content: '';
+  
+  &:before {
+    content: '•';
+    color: #667eea;
+    font-weight: bold;
     position: absolute;
-    top: 0;
     left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(45deg, #00d4ff, #667eea);
   }
+`;
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(45deg, #667eea, #00d4ff);
-  }
+const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  @media (max-width: 480px) {
+  grid-template-columns: 1fr;
+}
+`;
+
+const StatCard = styled.div`
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
 `;
 
 const StatNumber = styled.div`
-  font-size: 4rem;
-  font-weight: 900;
-  background: linear-gradient(45deg, #00d4ff, #667eea);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+  margin-bottom: 0.5rem;
 `;
 
 const StatLabel = styled.div`
-  color: #f0f0f0;
-  font-size: 1.2rem;
+  color: #6b7280;
+  font-size: 0.9rem;
   font-weight: 500;
 `;
 
-const ProcessContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
-`;
-
-const ProcessCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  border: 2px solid rgba(102, 126, 234, 0.3);
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(15px);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(0, 212, 255, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
+const ProcessStep = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
 `;
 
 const StepNumber = styled.div`
-  width: 90px;
-  height: 90px;
-  background: linear-gradient(45deg, #667eea, #00d4ff);
+  width: 32px;
+  height: 32px;
+  background: #667eea;
+  color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: white;
-  margin: 0 auto 2rem;
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-  position: relative;
-  z-index: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
 `;
 
-const StepTitle = styled.h3`
-  color: #667eea;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
+const StepContent = styled.div`
+  flex: 1;
+`;
+
+const StepTitle = styled.h4`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
 `;
 
 const StepDescription = styled.p`
-  color: #ccc;
-  line-height: 1.6;
-  font-size: 1rem;
-  font-weight: 300;
-  position: relative;
-  z-index: 1;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 `;
 
-const CTAButton = styled(motion.button)`
-  background: linear-gradient(45deg, #00d4ff, #667eea);
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+`;
+
+const ApplyButton = styled.button`
+  flex: 2;
+  background: #667eea;
   border: none;
   color: white;
-  padding: 1.5rem 3rem;
-  border-radius: 50px;
-  font-size: 1.3rem;
-  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  margin: 3rem auto;
-  display: block;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 212, 255, 0.5);
+    background: #764ba2;
   }
-`;
-
-const FloatingWaves = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
+  @media (max-width: 480px) {
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-`;
-
-const Wave = styled(motion.div)`
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(45deg, #00d4ff, #667eea);
-  border-radius: 50%;
-  opacity: 0.1;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+}
 `;
 
 const EcommercePage = () => {
   const navigate = useNavigate();
-  const [waves] = useState(Array.from({ length: 20 }, (_, i) => i));
+  const [activeTab, setActiveTab] = useState("solutions");
 
   const features = [
-    {
-      icon: "🛒",
-      title: "Smart Shopping Cart",
-      description: "AI-powered cart optimization with intelligent product recommendations and dynamic pricing strategies."
-    },
-    {
-      icon: "🎯",
-      title: "Personalized Recommendations",
-      description: "Advanced algorithms analyze user behavior to suggest products that match individual preferences and needs."
-    },
-    {
-      icon: "📊",
-      title: "Inventory Management",
-      description: "Predictive analytics optimize stock levels, reduce waste, and ensure products are always available."
-    },
-    {
-      icon: "💬",
-      title: "AI Customer Support",
-      description: "24/7 intelligent chatbots provide instant support, answer questions, and resolve issues efficiently."
-    },
-    {
-      icon: "🔍",
-      title: "Smart Search & Discovery",
-      description: "Natural language search and visual product recognition help customers find exactly what they need."
-    },
-    {
-      icon: "📈",
-      title: "Sales Optimization",
-      description: "AI-driven pricing strategies, promotions, and marketing campaigns maximize conversion rates and revenue."
-    }
+    { title: "Smart Shopping Cart", description: "AI-powered cart optimization with intelligent product recommendations and dynamic pricing strategies." },
+    { title: "Personalized Recommendations", description: "Advanced algorithms analyze user behavior to suggest products that match individual preferences and needs." },
+    { title: "Inventory Management", description: "Predictive analytics optimize stock levels, reduce waste, and ensure products are always available." },
+    { title: "AI Customer Support", description: "24/7 intelligent chatbots provide instant support, answer questions, and resolve issues efficiently." },
+    { title: "Smart Search & Discovery", description: "Natural language search and visual product recognition help customers find exactly what they need." },
+    { title: "Sales Optimization", description: "AI-driven pricing strategies, promotions, and marketing campaigns maximize conversion rates and revenue." }
   ];
 
   const stats = [
@@ -422,162 +307,87 @@ const EcommercePage = () => {
   ];
 
   const processSteps = [
-    {
-      title: "Customer Journey Analysis",
-      description: "AI tracks and analyzes customer behavior across all touchpoints to understand preferences and pain points."
-    },
-    {
-      title: "Personalized Experience",
-      description: "Dynamic content, recommendations, and pricing are tailored to each customer's unique profile and behavior."
-    },
-    {
-      title: "Intelligent Operations",
-      description: "Automated inventory management, order processing, and customer support ensure seamless operations."
-    },
-    {
-      title: "Continuous Optimization",
-      description: "AI continuously learns and improves based on real-time data to enhance customer experience and business performance."
-    }
+    { title: "Customer Journey Analysis", description: "AI tracks and analyzes customer behavior across all touchpoints to understand preferences and pain points." },
+    { title: "Personalized Experience", description: "Dynamic content, recommendations, and pricing are tailored to each customer's unique profile and behavior." },
+    { title: "Intelligent Operations", description: "Automated inventory management, order processing, and customer support ensure seamless operations." },
+    { title: "Continuous Optimization", description: "AI continuously learns and improves based on real-time data to enhance customer experience and business performance." }
   ];
 
   return (
     <PageContainer>
-      <FloatingWaves>
-        {waves.map((i) => (
-          <Wave
-            key={i}
-            style={{
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-            }}
-            initial={{ 
-              opacity: 0,
-              scale: 0
-            }}
-            animate={{ 
-              opacity: [0, 0.1, 0],
-              scale: [0, 1, 0],
-            }}
-            transition={{ 
-              duration: 6 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 5
-            }}
-          />
-        ))}
-      </FloatingWaves>
+      <SideImage src={EcommerceImg} alt="Decorative Agriculture" />
+      <MainCard>
+        <CloseButton onClick={() => navigate("/landing#area")}>
+          Back to Areas
+        </CloseButton>
 
-      <BackButton
-        onClick={() => navigate('/landing#area')}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        ← Back to Areas
-      </BackButton>
+        <HeaderSection />
 
-      <Header>
-        <HeaderContent>
-          <Title
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2 }}
+        <ContentSection>
+          <Title>E-commerce AI Solutions</Title>
+          <Description>
+            Revolutionizing online retail with cutting-edge AI for personalized shopping, inventory management, and enhanced customer experiences.
+          </Description>
+
+          <TabContainer>
+            <TabList>
+              <Tab $active={activeTab === "solutions"} onClick={() => setActiveTab("solutions")}>AI Solutions</Tab>
+              <Tab $active={activeTab === "implementation"} onClick={() => setActiveTab("implementation")}>Implementation Methods</Tab>
+            </TabList>
+          </TabContainer>
+
+          <TabContent
+            key={activeTab}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            E-commerce
-          </Title>
-          <Subtitle
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.4 }}
-          >
-            Revolutionizing online retail with cutting-edge AI solutions for personalized shopping,
-            intelligent inventory management, and enhanced customer experiences
-          </Subtitle>
-        </HeaderContent>
-      </Header>
+            {activeTab === "solutions" && (
+              <Section>
+                <SectionTitle>Key Features</SectionTitle>
+                <List>
+                  {features.map((feature, index) => (
+                    <ListItem key={index}>
+                      <strong>{feature.title}:</strong> {feature.description}
+                    </ListItem>
+                  ))}
+                </List>
 
-      <MainContent>
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <SectionTitle>AI Solutions for E-commerce</SectionTitle>
-          <HexagonalGrid>
-            {features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <FeatureIcon>{feature.icon}</FeatureIcon>
-                <FeatureTitle>{feature.title}</FeatureTitle>
-                <FeatureDescription>{feature.description}</FeatureDescription>
-              </FeatureCard>
-            ))}
-          </HexagonalGrid>
-        </Section>
+                <SectionTitle>Impact Metrics</SectionTitle>
+                <StatsGrid>
+                  {stats.map((stat, index) => (
+                    <StatCard key={index}>
+                      <StatNumber>{stat.number}</StatNumber>
+                      <StatLabel>{stat.label}</StatLabel>
+                    </StatCard>
+                  ))}
+                </StatsGrid>
+              </Section>
+            )}
 
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <SectionTitle>Impact Metrics</SectionTitle>
-          <StatsContainer>
-            {stats.map((stat, index) => (
-              <StatCard
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <StatNumber>{stat.number}</StatNumber>
-                <StatLabel>{stat.label}</StatLabel>
-              </StatCard>
-            ))}
-          </StatsContainer>
-        </Section>
+            {activeTab === "implementation" && (
+              <Section>
+                <SectionTitle>Implementation Process</SectionTitle>
+                {processSteps.map((step, index) => (
+                  <ProcessStep key={index}>
+                    <StepNumber>{index + 1}</StepNumber>
+                    <StepContent>
+                      <StepTitle>{step.title}</StepTitle>
+                      <StepDescription>{step.description}</StepDescription>
+                    </StepContent>
+                  </ProcessStep>
+                ))}
+              </Section>
+            )}
+          </TabContent>
 
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <SectionTitle>How It Works</SectionTitle>
-          <ProcessContainer>
-            {processSteps.map((step, index) => (
-              <ProcessCard
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-              >
-                <StepNumber>{index + 1}</StepNumber>
-                <StepTitle>{step.title}</StepTitle>
-                <StepDescription>{step.description}</StepDescription>
-              </ProcessCard>
-            ))}
-          </ProcessContainer>
-        </Section>
-
-        <CTAButton
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/landing#contact')}
-        >
-          Get Started with E-commerce AI
-        </CTAButton>
-      </MainContent>
+          <ActionButtons>
+            <ApplyButton onClick={() => navigate("/landing#contact")}>
+              Get Started with E-commerce AI
+            </ApplyButton>
+          </ActionButtons>
+        </ContentSection>
+      </MainCard>
     </PageContainer>
   );
 };

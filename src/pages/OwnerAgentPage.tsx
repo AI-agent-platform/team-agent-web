@@ -1,328 +1,470 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+// import React, { useState } from "react";
+import { motion, /*AnimatePresence*/ } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import OwnerAgentImg from "../Assets/what-we-offer/owner.jpg";
+// import OwnerAgentImg from "../Assets/what-we-offer/owner.jpg";
+import {
+  BarChart3,
+  Bot,
+  TrendingUp,
+  MessageSquare,
+  Settings,
+  Shield
+} from "lucide-react";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  background: #f8fafc;
+  position: relative;
   overflow-x: hidden;
 `;
 
-const Header = styled(motion.header)`
-  position: relative;
-  height: 100vh;
+const NavBar = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url(${OwnerAgentImg});
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  justify-content: space-between;
+  padding: 0 5%;
+  z-index: 1000;
 `;
 
-const HeaderContent = styled.div`
-  text-align: center;
-  color: white;
-  z-index: 2;
-  max-width: 800px;
-  padding: 0 2rem;
-`;
-
-const Title = styled(motion.h1)`
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #0fcb8c, #00d4ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 30px rgba(15, 203, 140, 0.5);
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
-  margin-bottom: 2rem;
-  opacity: 0.9;
-  line-height: 1.6;
+const Logo = styled.div`
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1e293b;
 `;
 
 const BackButton = styled(motion.button)`
-  position: fixed;
-  top: 2rem;
-  left: 2rem;
-  background: rgba(15, 203, 140, 0.2);
-  border: 2px solid #0fcb8c;
-  color: #0fcb8c;
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
+  background: #6366f1;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+  font-weight: 500;
   transition: all 0.3s ease;
-  z-index: 1000;
 
   &:hover {
-    background: #0fcb8c;
-    color: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(15, 203, 140, 0.3);
+    background: #4f46e5;
+    transform: translateY(-1px);
   }
 `;
 
-const MainContent = styled.main`
-  padding: 4rem 2rem;
+const HeroSection = styled.section`
+  padding: 120px 5% 80px;
   max-width: 1200px;
   margin: 0 auto;
 `;
 
-const Section = styled(motion.section)`
-  margin-bottom: 6rem;
+const HeroGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
 `;
 
-const SectionTitle = styled.h2`
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  color: #0fcb8c;
-  margin-bottom: 3rem;
-  text-align: center;
-  position: relative;
+const HeroContent = styled.div`
+  max-width: 500px;
+`;
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(45deg, #0fcb8c, #00d4ff);
-    border-radius: 2px;
+const HeroTitle = styled(motion.h1)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+`;
+
+const HeroSubtitle = styled(motion.p)`
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+`;
+
+const HeroButton = styled(motion.button)`
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
   }
+`;
+
+const HeroVisual = styled(motion.div)`
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+`;
+
+const MockupCard = styled.div`
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: between;
+    margin-bottom: 1rem;
+    
+    .title {
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    .status {
+      background: #10b981;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: auto;
+    }
+  }
+  
+  .content {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+`;
+
+const StatsRow = styled.div`
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  
+  .stat {
+    text-align: left;
+    
+    .number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #6366f1;
+    }
+    
+    .label {
+      font-size: 0.6rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+`;
+
+const Section = styled.section`
+  padding: 80px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+  margin-bottom: 3rem;
 `;
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 `;
 
 const FeatureCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(15, 203, 140, 0.2);
-  border-radius: 20px;
+  background: white;
+  border-radius: 12px;
   padding: 2rem;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(15, 203, 140, 0.1), transparent);
-    transition: left 0.5s ease;
-  }
 
   &:hover {
-    transform: translateY(-10px);
-    border-color: #0fcb8c;
-    box-shadow: 0 20px 40px rgba(15, 203, 140, 0.2);
-
-    &::before {
-      left: 100%;
-    }
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const FeatureIcon = styled.div`
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(45deg, #0fcb8c, #00d4ff);
-  border-radius: 15px;
+  width: 48px;
+  height: 48px;
+  background: #ede9fe;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  color: white;
+  color: #6366f1;
+  
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const FeatureTitle = styled.h3`
-  font-size: 1.5rem;
-  color: #0fcb8c;
-  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #0f172a;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
 `;
 
 const FeatureDescription = styled.p`
-  color: #ccc;
+  color: #64748b;
   line-height: 1.6;
-  font-size: 1rem;
+  font-size: 0.95rem;
 `;
 
-const StatsSection = styled.div`
+const MetricsSection = styled.section`
+  padding: 80px 5%;
+  background: white;
+`;
+
+const MetricsContainer = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+const MetricsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  margin: 4rem 0;
-`;
-
-const StatCard = styled(motion.div)`
-  text-align: center;
-  padding: 2rem;
-  background: rgba(15, 203, 140, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgba(15, 203, 140, 0.3);
-`;
-
-const StatNumber = styled.div`
-  font-size: 3rem;
-  font-weight: 800;
-  color: #0fcb8c;
-  margin-bottom: 0.5rem;
-`;
-
-const StatLabel = styled.div`
-  color: #ccc;
-  font-size: 1.1rem;
-`;
-
-const ProcessSection = styled.div`
+  gap: 3rem;
   margin-top: 4rem;
 `;
 
+const MetricCard = styled(motion.div)`
+  text-align: center;
+`;
+
+const MetricNumber = styled.div`
+  font-size: 3rem;
+  font-weight: 800;
+  color: #6366f1;
+  margin-bottom: 0.5rem;
+`;
+
+const MetricLabel = styled.div`
+  color: #64748b;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 00;
+`;
+
+const ProcessSection = styled.section`
+  padding: 80px 5%;
+  background: #f8fafc;
+`;
+
+const ProcessContainer = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const ProcessTimeline = styled.div`
+  position: relative;
+  margin-top: 4rem;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+    transform: translateX(-50%);
+    
+    @media (max-width: 768px) {
+      left: 20px;
+    }
+  }
+`;
+
 const ProcessStep = styled(motion.div)`
+  position: relative;
+  margin-bottom: 4rem;
   display: flex;
   align-items: center;
-  margin-bottom: 3rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 15px;
-  border-left: 4px solid #0fcb8c;
-
+  
+  &:nth-child(even) {
+    flex-direction: row-reverse;
+    
+    .content {
+      text-align: right;
+    }
+    
+    @media (max-width: 768px) {
+      flex-direction: row;
+      
+      .content {
+        text-align: left;
+      }
+    }
+  }
+  
   @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    align-items: flex-start;
   }
 `;
 
 const StepNumber = styled.div`
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(45deg, #0fcb8c, #00d4ff);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: #6366f1;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 800;
   color: white;
-  margin-right: 2rem;
-  flex-shrink: 0;
-
+  font-weight: 700;
+  z-index: 10;
+  
   @media (max-width: 768px) {
-    margin-right: 0;
-    margin-bottom: 1rem;
+    position: static;
+    transform: none;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
   }
 `;
 
 const StepContent = styled.div`
-  flex: 1;
-`;
-
-const StepTitle = styled.h3`
-  color: #0fcb8c;
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-`;
-
-const StepDescription = styled.p`
-  color: #ccc;
-  line-height: 1.6;
-`;
-
-const CTAButton = styled(motion.button)`
-  background: linear-gradient(45deg, #0fcb8c, #00d4ff);
-  border: none;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 2rem auto;
-  display: block;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(15, 203, 140, 0.4);
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: calc(50% - 2rem);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
-const FloatingParticles = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
+const StepTitle = styled.h3`
+  font-size: 1.3rem;
+  color: #0f172a;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
 `;
 
-const Particle = styled(motion.div)`
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #0fcb8c;
-  border-radius: 50%;
+const StepDescription = styled.p`
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 0.95rem;
+`;
+
+const CTASection = styled.section`
+  padding: 80px 5%;
+  background: #6366f1;
+  color: white;
+  text-align: center;
+`;
+
+const CTATitle = styled(motion.h2)`
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const CTASubtitle = styled(motion.p)`
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const CTAButton = styled(motion.button)`
+  background: white;
+  color: #6366f1;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const OwnerAgentPage = () => {
   const navigate = useNavigate();
-  const [particles] = useState(Array.from({ length: 20 }, (_, i) => i));
 
   const features = [
     {
-      icon: "📊",
+      icon: BarChart3,
       title: "Business Analytics",
-      description: "Real-time insights into business performance, revenue trends, and operational metrics with AI-powered analysis."
+      description: "Real-time insights into business performance with comprehensive analytics dashboard and reporting tools."
     },
     {
-      icon: "🤖",
-      title: "Automated Updates",
-      description: "Intelligent automation of routine business tasks, inventory management, and customer communication."
+      icon: Bot,
+      title: "Smart Automation",
+      description: "Intelligent automation of routine tasks, workflows, and business processes to boost productivity."
     },
     {
-      icon: "📈",
-      title: "Performance Monitoring",
-      description: "Continuous monitoring of business KPIs with predictive analytics and actionable recommendations."
+      icon: TrendingUp,
+      title: "Performance Tracking",
+      description: "Monitor key performance indicators and get actionable insights to drive business growth."
     },
     {
-      icon: "💬",
-      title: "Owner Communication",
-      description: "Seamless communication channel between AI agent and business owner with instant notifications."
+      icon: MessageSquare,
+      title: "Communication Hub",
+      description: "Centralized communication platform for seamless interaction between AI and business owners."
     },
     {
-      icon: "🔧",
-      title: "System Management",
-      description: "Automated system maintenance, updates, and optimization to ensure peak performance."
+      icon: Settings,
+      title: "System Integration",
+      description: "Connect all your business tools and systems for unified management and streamlined operations."
     },
     {
-      icon: "📱",
-      title: "Mobile Integration",
-      description: "Full mobile accessibility allowing owners to monitor and control their business from anywhere."
+      icon: Shield,
+      title: "Security & Compliance",
+      description: "Enterprise-grade security measures to protect your business data and ensure compliance."
     }
   ];
 
-  const stats = [
+  const metrics = [
     { number: "99.9%", label: "Uptime" },
     { number: "24/7", label: "Monitoring" },
     { number: "50%", label: "Time Saved" },
@@ -331,159 +473,233 @@ const OwnerAgentPage = () => {
 
   const processSteps = [
     {
-      title: "Initial Setup",
-      description: "Configure your business parameters, goals, and preferences for personalized AI assistance."
+      title: "Quick Setup",
+      description: "Get started in minutes with our intuitive setup process. Configure your business parameters and preferences easily."
     },
     {
-      title: "Data Integration",
-      description: "Connect your existing systems and data sources for comprehensive business intelligence."
+      title: "Data Connection",
+      description: "Securely connect your existing systems and data sources for comprehensive business intelligence."
     },
     {
-      title: "AI Training",
-      description: "Our AI learns your business patterns and optimizes operations for maximum efficiency."
+      title: "AI Learning",
+      description: "Our AI analyzes your business patterns and optimizes operations for maximum efficiency and growth."
     },
     {
-      title: "Continuous Optimization",
-      description: "Ongoing improvements and updates based on real-time performance data and market trends."
+      title: "Continuous Improvement",
+      description: "Experience ongoing enhancements and optimizations based on real-time performance data."
     }
   ];
 
   return (
     <PageContainer>
-      <FloatingParticles>
-        {particles.map((i) => (
-          <Particle
-            key={i}
-            initial={{ 
-              x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight,
-              opacity: 0 
-            }}
-            animate={{ 
-              y: [null, -100],
-              opacity: [0, 1, 0],
-            }}
-            transition={{ 
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2
-            }}
-          />
-        ))}
-      </FloatingParticles>
+      <NavBar>
+        <Logo>Owner Agent</Logo>
+        <BackButton
+          onClick={() => navigate('/landing#what-we-offer')}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Back to Home
+        </BackButton>
+      </NavBar>
 
-      <BackButton
-        onClick={() => navigate('/landing#what-we-offer')}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        ← Back to Home
-      </BackButton>
+      <HeroSection>
+        <HeroGrid>
+          <HeroContent>
+            <HeroTitle
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              About Owner Agent
+            </HeroTitle>
 
-      <Header>
-        <HeaderContent>
-          <Title
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            Owner Agent
-          </Title>
-          <Subtitle
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            <HeroSubtitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Your intelligent business partner that handles communication, updates, and optimization
+              to keep your business running at peak efficiency. Transform your operations with AI-powered insights.
+            </HeroSubtitle>
+
+            <HeroButton
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                const section = document.getElementById("how-it-works");
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              Learn more
+            </HeroButton>
+
+          </HeroContent>
+
+          <HeroVisual
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            Your intelligent business partner that handles communication, updates, and optimization
-            to keep your business running at peak efficiency
-          </Subtitle>
-        </HeaderContent>
-      </Header>
+            <MockupCard>
+              <div className="header">
+                <span className="title">Business Dashboard</span>
+                <span className="status">Connected</span>
+              </div>
+              <div className="content">
+                Real-time monitoring of all business operations with intelligent insights and automated reporting.
+              </div>
+            </MockupCard>
 
-      <MainContent>
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+            <MockupCard>
+              <div className="header">
+                <span className="title">AI Analytics</span>
+                <span className="status">Active</span>
+              </div>
+              <div className="content">
+                Advanced AI algorithms processing your business data to provide actionable recommendations.
+              </div>
+            </MockupCard>
+
+            <StatsRow>
+              <div className="stat">
+                <div className="number">25,000</div>
+                <div className="label">Tasks Automated</div>
+              </div>
+              <div className="stat">
+                <div className="number">99.9%</div>
+                <div className="label">Uptime</div>
+              </div>
+            </StatsRow>
+          </HeroVisual>
+        </HeroGrid>
+      </HeroSection>
+
+      <Section>
+        <SectionTitle
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <SectionTitle>Key Features</SectionTitle>
-          <FeaturesGrid>
-            {features.map((feature, index) => (
+          Key Features
+        </SectionTitle>
+
+        <FeaturesGrid>
+          {features.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
               <FeatureCard
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -4 }}
               >
-                <FeatureIcon>{feature.icon}</FeatureIcon>
+                <FeatureIcon>
+                  <IconComponent />
+                </FeatureIcon>
                 <FeatureTitle>{feature.title}</FeatureTitle>
                 <FeatureDescription>{feature.description}</FeatureDescription>
               </FeatureCard>
-            ))}
-          </FeaturesGrid>
-        </Section>
+            );
+          })}
+        </FeaturesGrid>
+      </Section>
 
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <SectionTitle>Performance Metrics</SectionTitle>
-          <StatsSection>
-            {stats.map((stat, index) => (
-              <StatCard
+      <MetricsSection>
+        <MetricsContainer>
+          <SectionTitle
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            Performance Metrics
+          </SectionTitle>
+
+          <MetricsGrid>
+            {metrics.map((metric, index) => (
+              <MetricCard
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
               >
-                <StatNumber>{stat.number}</StatNumber>
-                <StatLabel>{stat.label}</StatLabel>
-              </StatCard>
+                <MetricNumber>{metric.number}</MetricNumber>
+                <MetricLabel>{metric.label}</MetricLabel>
+              </MetricCard>
             ))}
-          </StatsSection>
-        </Section>
+          </MetricsGrid>
+        </MetricsContainer>
+      </MetricsSection>
 
-        <Section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <SectionTitle>How It Works</SectionTitle>
-          <ProcessSection>
+      <ProcessSection>
+        <ProcessContainer>
+          <div id="how-it-works">
+            <SectionTitle
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              How It Works
+            </SectionTitle>
+          </div>
+
+
+          <ProcessTimeline>
             {processSteps.map((step, index) => (
               <ProcessStep
                 key={index}
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
                 <StepNumber>{index + 1}</StepNumber>
-                <StepContent>
+                <StepContent className="content">
                   <StepTitle>{step.title}</StepTitle>
                   <StepDescription>{step.description}</StepDescription>
                 </StepContent>
               </ProcessStep>
             ))}
-          </ProcessSection>
-        </Section>
+          </ProcessTimeline>
+        </ProcessContainer>
+      </ProcessSection>
 
+      <CTASection>
+        <CTATitle
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          Ready to Get Started?
+        </CTATitle>
+        <CTASubtitle
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          Join thousands of businesses already using Owner Agent to streamline operations and boost productivity.
+        </CTASubtitle>
         <CTAButton
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => navigate('/landing#what-we-offer')}
         >
-          Get Started with Owner Agent
+          Start Your Journey
         </CTAButton>
-      </MainContent>
+      </CTASection>
     </PageContainer>
   );
 };

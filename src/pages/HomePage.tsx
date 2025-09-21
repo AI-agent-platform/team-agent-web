@@ -144,7 +144,7 @@ const Home = () => {
         </HomeTextSection>
 
         <SplitSection>
-          {/* Owner Agent - slides in from left */}
+          {/* Owner Agent - slides in from left */} 
           <SlideInFromSide from="left" duration={1.2} delay={0.2}>
             <SectionHalf
               className="left-section"
