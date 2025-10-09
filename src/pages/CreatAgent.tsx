@@ -6,11 +6,17 @@ import {
   useMyBusiness,
 } from "../hooks/useAgents";
 import { BusinessType } from "../constants/business-types.enum";
-import {
-  validateContact,
-  validateEmail,
-} from "../utils/auth/inputValidators.utils";
 import { useNavigate } from "react-router-dom";
+import {
+  CheckCircle,
+  Clock,
+  UploadCloud,
+  Building2,
+  Phone,
+  Mail,
+  Briefcase,
+  Loader2,
+} from "lucide-react";
 
 // ================== Animations ==================
 const fadeIn = keyframes`
@@ -18,61 +24,25 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const slideInLeft = keyframes`
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
-`;
-
-const slideInRight = keyframes`
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
-`;
-
-const pulse = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-`;
-
-// ================== Styled Components ==================
 const WizardContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172e 0%, #1a2847 50%, #0f3a5e 100%);
   padding: 60px 20px;
-  position: relative;
-  overflow: hidden;
   font-family: "Inter", sans-serif;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at 25% 25%,
-        rgba(99, 102, 241, 0.15),
-        transparent 60%
-      ),
-      radial-gradient(
-        circle at 80% 80%,
-        rgba(168, 85, 247, 0.15),
-        transparent 60%
-      );
-    pointer-events: none;
-  }
+  color: #e2e8f0;
 `;
 
 const Content = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 `;
 
 const Title = styled.h2`
   font-size: 42px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 15px;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
@@ -90,8 +60,7 @@ const StepWrapper = styled.div<{ isTwoColumn?: boolean }>`
     isTwoColumn ? "1fr 1fr" : "1fr"};
   gap: 30px;
   align-items: flex-start;
-  animation: ${fadeIn} 0.4s ease 0.2s both;
-
+  animation: ${fadeIn} 0.4s ease;
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
@@ -102,13 +71,12 @@ const Card = styled.div`
   backdrop-filter: blur(20px);
   border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: 24px;
-  padding: 40px;
-  transition: all 0.4s ease;
-  position: relative;
+  padding: 35px 40px;
+  transition: all 0.3s ease;
 
   &:hover {
     border-color: rgba(99, 102, 241, 0.6);
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
   }
 
   h3 {
@@ -117,6 +85,58 @@ const Card = styled.div`
     background: linear-gradient(135deg, #6366f1, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+`;
+
+const InfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  font-size: 15px;
+
+  @media (min-width: 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  padding: 12px 15px;
+  border-radius: 10px;
+
+  svg {
+    color: #818cf8;
+  }
+
+  span.label {
+    color: #94a3b8;
+    font-size: 13px;
+    display: block;
+  }
+
+  span.value {
+    font-weight: 500;
+    font-size: 15px;
+  }
+`;
+
+const Status = styled.div<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: ${({ active }) => (active ? "#22c55e" : "#fbbf24")};
+
+  svg {
+    flex-shrink: 0;
   }
 `;
 
@@ -129,12 +149,6 @@ const Input = styled.input`
   background: rgba(15, 23, 42, 0.5);
   color: #e2e8f0;
   font-size: 15px;
-
-  &:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-  }
 `;
 
 const Select = styled.select`
@@ -147,7 +161,7 @@ const Select = styled.select`
   color: #e2e8f0;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ loading?: boolean }>`
   background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
   color: #fff;
   border: none;
@@ -158,23 +172,20 @@ const Button = styled.button`
   margin-top: 24px;
   transition: all 0.3s ease;
   font-weight: 700;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   &:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
   }
-`;
-
-const ErrorText = styled.p`
-  color: #f87171;
-  font-size: 13px;
-  margin-top: -8px;
 `;
 
 const ToastContainer = styled.div`
@@ -200,11 +211,9 @@ const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
 `;
 
 const ModalBox = styled.div`
@@ -223,7 +232,7 @@ const ModalBox = styled.div`
 
   h3 {
     color: #a78bfa;
-    font-size: 28px;
+    font-size: 26px;
     margin-bottom: 16px;
   }
 
@@ -234,11 +243,13 @@ const ModalBox = styled.div`
   }
 `;
 
-// ================== Component ==================
 const CreateAgents: React.FC = () => {
   const [step, setStep] = useState(0);
   const [csvUploaded, setCsvUploaded] = useState(false);
   const [agentCreated, setAgentCreated] = useState(false);
+  const [uid,setUid] = useState('');
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
@@ -246,10 +257,6 @@ const CreateAgents: React.FC = () => {
     field: "",
     file: null as File | null,
   });
-  const [uid, setUid] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; contact?: string }>(
-    {}
-  );
   const [toasts, setToasts] = useState<
     { id: number; message: string; type: "success" | "error" }[]
   >([]);
@@ -260,13 +267,11 @@ const CreateAgents: React.FC = () => {
   const { mutate: uploadFile } = useUploadFile();
   const { mutate: fetchMyBusiness } = useMyBusiness();
 
-  // Load existing business on mount
   useEffect(() => {
     fetchMyBusiness(undefined, {
       onSuccess: (res) => {
         if (res.data) {
           const b = res.data;
-          setUid(b.ownerUid);
           setFormData({
             name: b.name || "",
             contact: b.contact || "",
@@ -274,20 +279,17 @@ const CreateAgents: React.FC = () => {
             field: b.field || "",
             file: null,
           });
+          setUid(b.ownerUid)
           setCsvUploaded(!!b.csvUploaded);
-          if (b.name) {
-            setStep(1);
-          }
-
-          setUid("6887d11b2b3e6250985710b2");
           if (b.csvUploaded) {
             setAgentCreated(true);
             setShowSuccessModal(true);
           }
+          if (b.name) setStep(1);
         }
       },
     });
-  }, []);
+  }, [step]);
 
   const addToast = (message: string, type: "success" | "error") => {
     const id = Date.now();
@@ -308,15 +310,15 @@ const CreateAgents: React.FC = () => {
       addToast("Please fill all fields!", "error");
       return;
     }
+
+    setLoadingCreate(true);
     createBusiness(formData, {
-      onSuccess: (res) => {
-        setUid(res.ownerUid);
+      onSuccess: () => {
+        addToast("Business created successfully!", "success");        
         setStep(1);
-        addToast("Business created successfully!", "success");
       },
-      onError: (err) => {
-        addToast("Business creation failed.", "error");
-      },
+      onError: () => addToast("Business creation failed.", "error"),
+      onSettled: () => setLoadingCreate(false),
     });
   };
 
@@ -329,12 +331,12 @@ const CreateAgents: React.FC = () => {
       setShowSuccessModal(true);
       return;
     }
-
     if (!formData.file) {
       addToast("Please select a file first.", "error");
       return;
     }
 
+    setLoadingUpload(true);
     uploadFile(
       { file: formData.file, business_uuid: uid },
       {
@@ -344,9 +346,8 @@ const CreateAgents: React.FC = () => {
           addToast("Agent deployed successfully!", "success");
           setShowSuccessModal(true);
         },
-        onError: () => {
-          addToast("File upload failed.", "error");
-        },
+        onError: () => addToast("File upload failed.", "error"),
+        onSettled: () => setLoadingUpload(false),
       }
     );
   };
@@ -359,7 +360,7 @@ const CreateAgents: React.FC = () => {
           <Subtitle>
             {step === 0
               ? "Get your business running in minutes"
-              : "Complete your agent setup"}
+              : "Review your info & deploy your agent"}
           </Subtitle>
 
           <StepWrapper isTwoColumn={step === 1}>
@@ -401,32 +402,93 @@ const CreateAgents: React.FC = () => {
                     </option>
                   ))}
                 </Select>
-                <Button onClick={handleCreateBusiness}>Continue →</Button>
+                <Button
+                  onClick={handleCreateBusiness}
+                  disabled={loadingCreate}
+                  loading={loadingCreate}
+                >
+                  {loadingCreate ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" /> Creating...
+                    </>
+                  ) : (
+                    "Continue →"
+                  )}
+                </Button>
               </Card>
             ) : (
               <>
                 <Card>
                   <h3>✅ Business Summary</h3>
-                  <p>
-                    <strong>Business:</strong> {formData.name}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {formData.email}
-                  </p>
-                  <p>
-                    <strong>Contact:</strong> {formData.contact}
-                  </p>
-                  <p>
-                    <strong>Industry:</strong> {formData.field}
-                  </p>
-                  <p>
-                    <strong>CSV Status:</strong>{" "}
-                    {csvUploaded ? "✅ Uploaded" : "⏳ Pending"}
-                  </p>
-                  <p>
-                    <strong>Agent Status:</strong>{" "}
-                    {agentCreated ? "✅ Active" : "⏳ Pending"}
-                  </p>
+                  <InfoGrid>
+                    <InfoItem>
+                      <Building2 size={18} />
+                      <div>
+                        <span className="label">Business Name</span>
+                        <span className="value">{formData.name}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <Mail size={18} />
+                      <div>
+                        <span className="label">Email</span>
+                        <span className="value">{formData.email}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <Phone size={18} />
+                      <div>
+                        <span className="label">Contact</span>
+                        <span className="value">{formData.contact}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <Briefcase size={18} />
+                      <div>
+                        <span className="label">Industry</span>
+                        <span className="value">{formData.field}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <UploadCloud size={18} />
+                      <div>
+                        <span className="label">CSV Status</span>
+                        <Status active={csvUploaded}>
+                          {csvUploaded ? (
+                            <>
+                              <CheckCircle size={18} /> Uploaded
+                            </>
+                          ) : (
+                            <>
+                              <Clock size={18} /> Pending
+                            </>
+                          )}
+                        </Status>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <CheckCircle size={18} />
+                      <div>
+                        <span className="label">Agent Status</span>
+                        <Status active={agentCreated}>
+                          {agentCreated ? (
+                            <>
+                              <CheckCircle size={18} /> Active
+                            </>
+                          ) : (
+                            <>
+                              <Clock size={18} /> Pending
+                            </>
+                          )}
+                        </Status>
+                      </div>
+                    </InfoItem>
+                  </InfoGrid>
                 </Card>
 
                 <Card>
@@ -441,7 +503,20 @@ const CreateAgents: React.FC = () => {
                       })
                     }
                   />
-                  <Button onClick={handleUpload}>Deploy Agent →</Button>
+                  <Button
+                    onClick={handleUpload}
+                    disabled={loadingUpload}
+                    loading={loadingUpload}
+                  >
+                    {loadingUpload ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />{" "}
+                        Deploying...
+                      </>
+                    ) : (
+                      "Deploy Agent →"
+                    )}
+                  </Button>
                 </Card>
               </>
             )}
@@ -462,8 +537,8 @@ const CreateAgents: React.FC = () => {
           <ModalBox>
             <h3>🎉 Agent Active!</h3>
             <p>
-              Your AI agent is fully active! Check your email for API
-              credentials and integration details.
+              Your AI agent is now fully deployed. Check your email for API
+              credentials and integration instructions.
             </p>
             <Button onClick={() => navigate("/")}>Go to Dashboard →</Button>
           </ModalBox>
