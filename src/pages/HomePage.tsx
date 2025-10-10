@@ -2,13 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import { SlideInFromSide } from "../components/FramerMotion";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // <-- make sure this is your auth hook path
+import { toast } from "react-toastify"; // <-- make sure you've installed react-toastify
+import "react-toastify/dist/ReactToastify.css";
+
 import OwnerAgentImg from "../Assets/what-we-offer/owner-agent.jpg";
 import CustomerAgentImg from "../Assets/what-we-offer/customer-agent.jpg";
 
 const HomeTextSection = styled.div`
   text-align: left;
-  max-width: 800px; /* limits paragraph width */
-  margin: 0 0 2rem 200px; 
+  max-width: 800px;
+  margin: 0 0 2rem 200px;
 
   h1 {
     font-size: 3rem;
@@ -25,7 +29,7 @@ const HomeTextSection = styled.div`
 
   @media (max-width: 768px) {
     max-width: 100%;
-    margin-left: 20px; /* smaller left margin on mobile */
+    margin-left: 20px;
     h1 {
       font-size: 2.5rem;
     }
@@ -39,11 +43,11 @@ const SplitSection = styled.div`
   display: flex;
   width: 100%;
   margin-top: 2rem;
-  gap: 1rem; /* separation between sections */
+  gap: 1rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 1.5rem; /* vertical spacing on mobile */
+    gap: 1.5rem;
   }
 `;
 
@@ -57,6 +61,7 @@ const SectionHalf = styled.div`
   background-position: center;
   height: 30rem;
   border-radius: 20px;
+
   &:hover {
     transform: scale(1.05);
   }
@@ -120,9 +125,47 @@ const Overlay = styled.div`
   }
 `;
 
+const GetStartedButton = styled.button`
+  background-color: #0fcb8c;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin: 3rem auto 5rem auto;
+  display: block;
+  font-family: "Mark Medium", sans-serif;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #0ca875;
+    transform: translateY(-3px);
+    box-shadow: 0px 4px 10px rgba(15, 203, 140, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+`;
+
 const Home = () => {
   const navigate = useNavigate();
-  
+  const { isUserLoggedIn } = useAuth(); // your auth context must return this
+
+  const handleGetStarted = () => {
+    if (isUserLoggedIn) {
+      navigate("/create-agent");
+    } else {
+      toast.info("Lets start by creating free account.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      navigate("/signup");
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="home-banner-container" id="home">
@@ -144,12 +187,12 @@ const Home = () => {
         </HomeTextSection>
 
         <SplitSection>
-          {/* Owner Agent - slides in from left */} 
+          {/* Owner Agent - slides in from left */}
           <SlideInFromSide from="left" duration={1.2} delay={0.2}>
             <SectionHalf
               className="left-section"
               style={{ backgroundImage: `url(${OwnerAgentImg})` }}
-              onClick={() => navigate('/owner-agent')}
+              onClick={() => navigate("/owner-agent")}
             >
               <Overlay>
                 <h2>Owner Agent</h2>
@@ -166,7 +209,7 @@ const Home = () => {
             <SectionHalf
               className="right-section"
               style={{ backgroundImage: `url(${CustomerAgentImg})` }}
-              onClick={() => navigate('/customer-agent')}
+              onClick={() => navigate("/customer-agent")}
             >
               <Overlay>
                 <h2>Customer Agent</h2>
@@ -178,6 +221,11 @@ const Home = () => {
             </SectionHalf>
           </SlideInFromSide>
         </SplitSection>
+
+        {/* Get Started Button */}
+        <GetStartedButton onClick={handleGetStarted}>
+          Get Started
+        </GetStartedButton>
       </div>
     </div>
   );

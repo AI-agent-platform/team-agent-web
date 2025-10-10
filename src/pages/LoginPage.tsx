@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
 
 const PageBackground = styled.div`
   min-height: 100vh;
@@ -59,7 +60,7 @@ const Button = styled.button<{ disabled?: boolean }>`
   cursor: pointer;
   transition: all 0.3s;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
-  
+
   &:hover {
     transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
@@ -134,42 +135,45 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <PageBackground>
-      <Card>
-        <Title>Login</Title>
-        {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
-        <form onSubmit={handleSubmit}>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Logging in..." : "Login"}
-          </Button>
-        </form>
+    <>
+      <Navbar />
+      <PageBackground>
+        <Card>
+          <Title>Login</Title>
+          {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
+          <form onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Logging in..." : "Login"}
+            </Button>
+          </form>
 
-        <div style={{ margin: "20px 0" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleLogin}
-            onError={() => toast.error("Google login failed")}
-          />
-        </div>
+          <div style={{ margin: "20px 0" }}>
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={() => toast.error("Google login failed")}
+            />
+          </div>
 
-        <SwitchLink>
-          Don't have an account? <Link to="/signup">Sign Up</Link>
-        </SwitchLink>
-      </Card>
-    </PageBackground>
+          <SwitchLink>
+            Don't have an account? <Link to="/signup">Sign Up</Link>
+          </SwitchLink>
+        </Card>
+      </PageBackground>
+    </>
   );
 };
 

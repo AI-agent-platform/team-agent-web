@@ -8,8 +8,8 @@ import {
   FileUploadPayload,
 } from "./dto/agent.dto";
 
-
 const NestBaseUrl = process.env.REACT_APP_NEST_API;
+const FileUploadUrl = process.env.FAST_API_FILE_UPLOAD_URL;
 const API_URL = `${NestBaseUrl}/business`;
 const DjangoBaseUrl = process.env.REACT_APP_DJANGO_API;
 
@@ -37,15 +37,12 @@ export async function answerFieldQuestion(payload: FieldAnswerPayload) {
 }
 
 export async function uploadFile(payload: FileUploadPayload, token?: string) {
-  
   const formData = new FormData();
-  formData.append("file", payload.file);
-  formData.append("uid", payload.uid);
-  formData.append("companyName", payload.companyName);
-  formData.append("field", payload.field);
+  formData.append("csv_file", payload.file);
+  formData.append("business_uuid", payload.business_uuid);
 
   const { data } = await axios.post(
-    `${DjangoBaseUrl}/upload-file/`,   
+    `${FileUploadUrl}/`,
     formData,
     {
       headers: {
@@ -54,17 +51,18 @@ export async function uploadFile(payload: FileUploadPayload, token?: string) {
       },
     }
   );
-  return data;
-}
 
-export async function addMoreData(payload: AddMoreDataPayload) {
-  const { data } = await axios.post(`${API_URL}/llm/add-data`, payload);
-  return data;
-}
-
-export async function createDualAgents(payload: DualAgentsPayload) {
-  const { data } = await axios.post(`${DjangoBaseUrl}/`, payload);
-  return data;
+  //update mongoDB
+  const updatedBusiness = await axios.put(
+    `${API_URL}`,
+    { csvUploaded: true },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return updatedBusiness;
 }
 
 export async function fetchMyBusiness(token: string) {

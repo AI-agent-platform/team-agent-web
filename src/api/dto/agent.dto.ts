@@ -1,4 +1,3 @@
-
 export type CreateUserPayload = {
   name: string;
   contact: string;
@@ -19,11 +18,9 @@ export type FieldAnswerPayload = {
   questionId: string;
 };
 
-export type FileUploadPayload = {
-  uid: string;
-  companyName: string;
-  field: string;
+export type FileUploadPayload = { 
   file: File;
+  business_uuid: string;
 };
 
 export type AddMoreDataPayload = {
@@ -33,7 +30,7 @@ export type AddMoreDataPayload = {
 };
 
 export type DualAgentsPayload = {
-  action:string;
+  action: string;
   company_name: string;
   uid: string;
   field: string;

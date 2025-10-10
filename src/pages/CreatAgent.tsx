@@ -3,515 +3,622 @@ import styled, { keyframes } from "styled-components";
 import {
   useCreateBusiness,
   useUploadFile,
-  useCreateDualAgents,
   useMyBusiness,
 } from "../hooks/useAgents";
 import { BusinessType } from "../constants/business-types.enum";
+import { useNavigate } from "react-router-dom";
+import {
+  CheckCircle,
+  Clock,
+  UploadCloud,
+  Building2,
+  Phone,
+  Mail,
+  Briefcase,
+  Loader2,
+} from "lucide-react";
 import {
   validateContact,
   validateEmail,
+  validateField,
+  validateName,
 } from "../utils/auth/inputValidators.utils";
+import { InputField } from "../components/form-components/InputField";
 
-// --- Styled Components ---
-const WizardContainer = styled.div`
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 40px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #f0f4ff, #ffffff);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  font-family: "Roboto", sans-serif;
+// ================== Animations ==================
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
-const StepContent = styled.div`
-  margin: 20px 0;
+const WizardContainer = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172e 0%, #1a2847 50%, #0f3a5e 100%);
+  padding: 60px 20px;
+  font-family: "Inter", sans-serif;
+  color: #e2e8f0;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+const Input = styled.input<{ error?: boolean }>`
+  width: 100%;
+  padding: 16px 18px;
+  margin: 14px 0;
+  border: 2px solid
+    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.5);
+  color: #e2e8f0;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ error }) =>
+      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+  }
+`;
+
+const ErrorMessage = styled.span`
+  color: #ef4444;
+  font-size: 13px;
+  display: block;
+  margin: -12px 0 14px 18px;
+  font-weight: 500;
+`;
+const Content = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h2`
+  font-size: 42px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
+const Subtitle = styled.p`
+  text-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+  margin-bottom: 50px;
+`;
+
+const StepWrapper = styled.div<{ isTwoColumn?: boolean }>`
+  display: ${({ isTwoColumn }) => (isTwoColumn ? "grid" : "flex")};
+  grid-template-columns: ${({ isTwoColumn }) =>
+    isTwoColumn ? "1fr 1fr" : "1fr"};
+  gap: 30px;
+  align-items: flex-start;
+  animation: ${fadeIn} 0.4s ease;
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Card = styled.div`
+  background: rgba(30, 41, 82, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 24px;
+  padding: 35px 40px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+`;
+
+const InfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  font-size: 15px;
+
+  @media (min-width: 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const InfoItem = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  padding: 12px 15px;
+  border-radius: 10px;
 
-  input[type="text"],
-  input[type="email"],
-  input[type="file"] {
-    width: 80%;
-    padding: 12px;
-    margin: 10px 0;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: 0.3s;
-    &:focus {
-      border-color: #4caf50;
-      outline: none;
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-    }
+  svg {
+    color: #818cf8;
   }
 
-  /* Styles for the create-agents button placed here so it applies when the button is rendered inside StepContent */
-  .create-agents {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 14px 28px;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.18);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-    margin-top: 8px;
+  span.label {
+    color: #94a3b8;
+    font-size: 13px;
+    display: block;
   }
 
-  .create-agents:hover:not(:disabled) {
+  span.value {
+    font-weight: 500;
+    font-size: 15px;
+  }
+`;
+
+const Status = styled.div<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: ${({ active }) => (active ? "#22c55e" : "#fbbf24")};
+
+  svg {
+    flex-shrink: 0;
+  }
+`;
+
+const Select = styled.select<{ error?: boolean }>`
+  width: 100%;
+  padding: 16px 18px;
+  margin: 14px 0;
+  border: 2px solid
+    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.5);
+  color: #e2e8f0;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ error }) =>
+      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+  }
+`;
+
+const Button = styled.button<{ loading?: boolean }>`
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: #fff;
+  border: none;
+  padding: 16px 32px;
+  font-size: 15px;
+  border-radius: 14px;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(76, 175, 80, 0.22);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
   }
 
-  .create-agents:disabled {
+  &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
   }
-`;
-
-const FieldsSelection = styled.div`
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  margin-top: 20px;
-
-  .field-card {
-    flex: 1;
-    padding: 20px;
-    margin: 0 10px;
-    border-radius: 12px;
-    border: 2px solid #ddd;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    transition: 0.3s;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #333;
-
-    &:hover {
-      border-color: #2196f3;
-      background-color: #e3f2fd;
-    }
-
-    &.selected {
-      border-color: #2196f3;
-      background-color: #bbdefb;
-    }
-  }
-`;
-
-const WizardButtons = styled.div`
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-
-  button {
-    padding: 12px 25px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-    &:hover:enabled {
-      opacity: 0.9;
-    }
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  .back {
-    background-color: #ccc;
-    color: #333;
-  }
-
-  .next {
-    background-color: #2196f3;
-    color: white;
-  }
-
-  /* keep create-agents here as well for safety if you ever render it inside the button area */
-  .create-agents {
-    background-color: #4caf50;
-    color: #fff;
-    padding: 14px 28px;
-    font-size: 17px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-  }
-`;
-
-const ProgressBar = styled.div`
-  display: flex;
-  margin-top: 40px;
-  justify-content: space-between;
-`;
-
-const ProgressStep = styled.div<{ active: boolean }>`
-  flex: 1;
-  height: 10px;
-  margin: 0 4px;
-  border-radius: 5px;
-  background-color: ${(props) => (props.active ? "#2196f3" : "#ddd")};
-  transition: 0.3s;
-`;
-
-const LoadingText = styled.p`
-  color: #ff7f50;
-  font-weight: bold;
-  margin: 10px 0;
-`;
-
-// --- Toasts ---
-const slideIn = keyframes`
-  0% { transform: translateY(-100%); opacity: 0 }
-  100% { transform: translateY(0); opacity: 1 }
 `;
 
 const ToastContainer = styled.div`
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 30px;
+  right: 30px;
   z-index: 9999;
 `;
 
 const Toast = styled.div<{ type: "success" | "error" }>`
-  min-width: 250px;
-  margin-bottom: 10px;
-  padding: 15px 20px;
-  color: #fff;
-  background-color: ${(props) =>
-    props.type === "success" ? "#4caf50" : "#f44336"};
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  animation: ${slideIn} 0.3s ease forwards;
+  background: ${({ type }) =>
+    type === "success"
+      ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
+      : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)"};
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
 `;
 
-interface ToastMessage {
-  id: number;
-  message: string;
-  type: "success" | "error";
-}
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-// --- Component ---
+const ModalBox = styled.div`
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 82, 0.95),
+    rgba(51, 65, 117, 0.8)
+  );
+  padding: 50px;
+  border-radius: 24px;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+
+  h3 {
+    color: #a78bfa;
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #cbd5e1;
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+`;
+
+// ================== Main Component ==================
 const CreateAgents: React.FC = () => {
   const [step, setStep] = useState(0);
-  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+  const [csvUploaded, setCsvUploaded] = useState(false);
+  const [agentCreated, setAgentCreated] = useState(false);
+  const [uid, setUid] = useState("");
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
     email: "",
-    uid: "",
     field: "",
-    files: [] as File[],
+    file: null as File | null,
   });
-  const [buttonsDisabled, setButtonsDisabled] = useState(false);
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
-  const [errors, setErrors] = useState<{ email?: string; contact?: string }>(
-    {}
-  );
-  const token = localStorage.getItem("access_token");
-  const { mutate: createBusiness } = useCreateBusiness(token!);
-  const { mutate: uploadFile } = useUploadFile(token!);
-  const { mutate: createDualAgents } = useCreateDualAgents();
-  const { mutate: fetchMyBusiness } = useMyBusiness(token!);
+  const [touched, setTouched] = useState({
+    name: false,
+    contact: false,
+    email: false,
+    field: false,
+  });
+  const [toasts, setToasts] = useState<
+    { id: number; message: string; type: "success" | "error" }[]
+  >([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const navigate = useNavigate();
 
-  // Fetch existing business info
+  const { mutate: createBusiness } = useCreateBusiness();
+  const { mutate: uploadFile } = useUploadFile();
+  const { mutate: fetchMyBusiness } = useMyBusiness();
+
   useEffect(() => {
     fetchMyBusiness(undefined, {
       onSuccess: (res) => {
-        if (!res.data) return;
-        const business = res.data;
-        setFormData({
-          ...formData,
-          name: business.name || "",
-          contact: business.contact || "",
-          email: business.email || "",
-          uid: business.ownerUid || "",
-          field: business.field || "",
-          files: [],
-        });
-
-        const firstIncomplete = [0, 1, 2, 3, 4, 5].find(
-          (s) => !res.completedSteps.includes(s)
-        );
-        setStep(firstIncomplete ?? 6);
+        if (res.data) {
+          const b = res.data;
+          setFormData({
+            name: b.name || "",
+            contact: b.contact || "",
+            email: b.email || "",
+            field: b.field || "",
+            file: null,
+          });
+          setUid(b.ownerUid);
+          setCsvUploaded(!!b.csvUploaded);
+          if (b.csvUploaded) {
+            setAgentCreated(true);
+            setShowSuccessModal(true);
+          }
+          if (b.name) setStep(1);
+        }
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [step]);
 
   const addToast = (message: string, type: "success" | "error") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
+    setTimeout(
+      () => setToasts((prev) => prev.filter((t) => t.id !== id)),
+      4000
+    );
   };
 
-  // --- Step navigation ---
-  const handleNext = () => {
-    setButtonsDisabled(true);
+  const isFormValid = (): boolean => {
+    return (
+      validateName(formData.name).valid &&
+      validateEmail(formData.email).valid &&
+      validateContact(formData.contact).valid &&
+      validateField(formData.field).valid
+    );
+  };
 
-    if (step === 3) {
-      // --- Business creation ---
-      if (!formData.field) {
-        addToast("Please select a field!", "error");
-        setButtonsDisabled(false);
-        return;
-      }
-      setLoadingMessage("Creating your business...");
-      createBusiness(
-        {
-          name: formData.name,
-          contact: formData.contact,
-          email: formData.email,
-          field: formData.field,
-        },
-        {
-          onSuccess: (res) => {
-            setFormData({ ...formData });
-            setLoadingMessage(null);
-            addToast("Business created successfully!", "success");
-            setStep(step + 1);
-            setButtonsDisabled(false);
-          },
-          onError: (err) => {
-            setLoadingMessage(null);
-            const message =
-              err.response?.data?.message ||
-              err.response?.data?.detail ||
-              err.message ||
-              "Business creation failed.";
+  const handleCreateBusiness = () => {
+    setTouched({ name: true, email: true, contact: true, field: true });
 
-            addToast(message, "error");
-            setButtonsDisabled(false);
-          },
-        }
-      );
-    } else if (step === 4) {
-      // --- File upload only ---
-      const file = formData.files[0];
-      if (!file) {
-        addToast("Please select a file to upload.", "error");
-        setButtonsDisabled(false);
-        return;
-      }
-
-      setLoadingMessage("Uploading file...");
-      uploadFile(
-        {
-          uid: formData.uid,
-          companyName: formData.name,
-          field: formData.field,
-          file,
-        },
-        {
-          onSuccess: () => {
-            setLoadingMessage(null);
-            addToast("File uploaded successfully!", "success");
-            setStep(step + 1); // Go to step 5
-            setButtonsDisabled(false);
-          },
-          onError: () => {
-            setLoadingMessage(null);
-            addToast("File upload failed.", "error");
-            setButtonsDisabled(false);
-          },
-        }
-      );
-    } else {
-      setStep(step + 1);
-      setButtonsDisabled(false);
+    if (!isFormValid()) {
+      addToast("Please fill all fields correctly!", "error");
+      return;
     }
-  };
 
-  const handleBack = () => {
-    if (step > 0) setStep(step - 1);
-  };
-
-  // --- Agent creation ---
-  const handleCreateAgents = () => {
-    setButtonsDisabled(true);
-    setLoadingMessage("Creating dual agents...");
-
-    createDualAgents(
-      {
-        action: "dual_agents_confirm",
-        uid: formData.uid,
-        company_name: formData.name,
-        field: formData.field,
+    setLoadingCreate(true);
+    createBusiness(formData, {
+      onSuccess: () => {
+        addToast("Business created successfully!", "success");
+        setStep(1);
       },
+      onError: () => addToast("Business creation failed.", "error"),
+      onSettled: () => setLoadingCreate(false),
+    });
+  };
+
+  const handleUpload = () => {
+    if (csvUploaded) {
+      addToast(
+        "Agent already created. Check your email for API credentials.",
+        "error"
+      );
+      setShowSuccessModal(true);
+      return;
+    }
+    if (!formData.file) {
+      addToast("Please select a file first.", "error");
+      return;
+    }
+
+    setLoadingUpload(true);
+    uploadFile(
+      { file: formData.file, business_uuid: uid },
       {
         onSuccess: () => {
-          setLoadingMessage(null);
-          addToast("Dual agents created successfully!", "success");
-          setStep(step + 1);
-          setButtonsDisabled(false);
+          setCsvUploaded(true);
+          setAgentCreated(true);
+          addToast("Agent deployed successfully!", "success");
+          setShowSuccessModal(true);
         },
-        onError: () => {
-          setLoadingMessage(null);
-          addToast("Failed to create agents.", "error");
-          setButtonsDisabled(false);
-        },
+        onError: () => addToast("File upload failed.", "error"),
+        onSettled: () => setLoadingUpload(false),
       }
     );
   };
 
-  // --- Render steps ---
-  const renderStep = () => {
-    switch (step) {
-      case 0:
-        return (
-          <input
-            type="text"
-            placeholder="Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        );
-      case 1:
-        return (
-          <input
-            type="text"
-            placeholder="Contact"
-            value={formData.contact}
-            onChange={(e) => {
-              const value = e.target.value;
-              setFormData({ ...formData, contact: value });
-              setErrors({
-                ...errors,
-                contact: validateContact(value)
-                  ? ""
-                  : "Contact number must be at least 7 characters",
-              });
-            }}
-          />
-        );
-      case 2:
-        return (
-          <input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) => {
-              const value = e.target.value;
-              setFormData({ ...formData, email: value });
-              setErrors({
-                ...errors,
-                email: validateEmail(value) ? "" : "Invalid email format",
-              });
-            }}
-          />
-        );
-      case 3:
-        return (
-          <FieldsSelection>
-            {Object.values(BusinessType).map((fieldOption) => (
-              <div
-                key={fieldOption}
-                className={`field-card ${
-                  formData.field === fieldOption ? "selected" : ""
-                }`}
-                onClick={() => setFormData({ ...formData, field: fieldOption })}
-              >
-                {fieldOption.charAt(0).toUpperCase() + fieldOption.slice(1)}
-              </div>
-            ))}
-          </FieldsSelection>
-        );
-      //   case 4:
-      //     return (
-      //       <input
-      //         type="file"
-      //         onChange={(e) =>
-      //           setFormData({
-      //             ...formData,
-      //             files: e.target.files ? Array.from(e.target.files) : [],
-      //           })
-      //         }
-      //       />
-      //     );
-      //   case 5:
-      //     // Step 6 (index 5): ONLY render the create-agents button (no other text, no back button)
-      //     return (
-      //       <button
-      //         className="create-agents"
-      //         onClick={handleCreateAgents}
-      //         disabled={buttonsDisabled}
-      //       >
-      //         {buttonsDisabled ? "Creating Agents..." : "Create Agents"}
-      //       </button>
-      //     );
-      case 4:
-        return (
-          <p>🎉 Setup completed! You will get user guide through your email</p>
-        );
-
-      default:
-        return (
-          <p>🎉 Setup completed! You will get user guide through your email</p>
-        );
-    }
-  };
-
   return (
-    <WizardContainer>
-      <h2>Step {step + 1} / 6</h2>
-      <StepContent>
-        {renderStep()}
+    <>
+      <WizardContainer>
+        <Content>
+          <Title>{step === 0 ? "Business Setup" : "Upload & Deploy"}</Title>
+          <Subtitle>
+            {step === 0
+              ? "Get your business running in minutes"
+              : "Review your info & deploy your agent"}
+          </Subtitle>
 
-        {loadingMessage && step !== 5 && (
-          <LoadingText>{loadingMessage}</LoadingText>
-        )}
-      </StepContent>
-      <WizardButtons>
-        {step > 0 && step < 4 && (
-          <button
-            className="back"
-            onClick={handleBack}
-            disabled={buttonsDisabled}
-          >
-            Back
-          </button>
-        )}
-        {step <= 3 && (
-          <button
-            className="next"
-            onClick={handleNext}
-            disabled={
-              buttonsDisabled ||
-              (step === 3 && !formData.field) ||
-              (step === 1 && !!errors.contact) ||
-              (step === 2 && !!errors.email)
-            }
-          >
-            Next
-          </button>
-        )}
-      </WizardButtons>
-      <ProgressBar>
-        {[...Array(4)].map((_, i) => (
-          <ProgressStep key={i} active={i <= step} />
-        ))}
-      </ProgressBar>
+          <StepWrapper isTwoColumn={step === 1}>
+            {step === 0 ? (
+              <Card style={{ width: "100%" }}>
+                <h3>📋 Business Details</h3>
+                <div style={{ width: "100%" }}>
+                  <InputField
+                    placeholder="Business Name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    validator={validateName}
+                    touched={touched.name}
+                    onBlur={() => setTouched({ ...touched, name: true })}
+                  />
+                  <InputField
+                    placeholder="Contact Number"
+                    value={formData.contact}
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+                      setFormData({ ...formData, contact: digitsOnly });
+                    }}
+                    validator={validateContact}
+                    touched={touched.contact}
+                    onBlur={() => setTouched({ ...touched, contact: true })}
+                  />
+                  <InputField
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    validator={validateEmail}
+                    touched={touched.email}
+                    onBlur={() => setTouched({ ...touched, email: true })}
+                  />
+                  <InputWrapper>
+                    <Select
+                      value={formData.field}
+                      onChange={(e) =>
+                        setFormData({ ...formData, field: e.target.value })
+                      }
+                      onBlur={() => setTouched({ ...touched, field: true })}
+                      error={
+                        touched.field && !validateField(formData.field).valid
+                      }
+                    >
+                      <option value="">Select Industry Field</option>
+                      {Object.values(BusinessType).map((field) => (
+                        <option key={field} value={field}>
+                          {field}
+                        </option>
+                      ))}
+                    </Select>
+                    {touched.field && !validateField(formData.field).valid && (
+                      <ErrorMessage>
+                        {validateField(formData.field).error}
+                      </ErrorMessage>
+                    )}
+                  </InputWrapper>
+                </div>
+                <Button
+                  onClick={handleCreateBusiness}
+                  disabled={loadingCreate || !isFormValid()}
+                  loading={loadingCreate}
+                >
+                  {loadingCreate ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" /> Creating...
+                    </>
+                  ) : (
+                    "Continue →"
+                  )}
+                </Button>
+              </Card>
+            ) : (
+              <>
+                <Card>
+                  <h3>You have successfully craeted your agents. Now lets input your business data for accurate response</h3>
+                  <InfoGrid>
+                    <InfoItem>
+                      <Building2 size={18} />
+                      <div>
+                        <span className="label">Business Name</span>
+                        <span className="value">{formData.name}</span>
+                      </div>
+                    </InfoItem>
 
-      <ToastContainer>
-        {toasts.map((toast) => (
-          <Toast key={toast.id} type={toast.type}>
-            {toast.message}
-          </Toast>
-        ))}
-      </ToastContainer>
-    </WizardContainer>
+                    <InfoItem>
+                      <Mail size={18} />
+                      <div>
+                        <span className="label">Email</span>
+                        <span className="value">{formData.email}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <Phone size={18} />
+                      <div>
+                        <span className="label">Contact</span>
+                        <span className="value">{formData.contact}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <Briefcase size={18} />
+                      <div>
+                        <span className="label">Industry</span>
+                        <span className="value">{formData.field}</span>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <UploadCloud size={18} />
+                      <div>
+                        <span className="label">CSV Status</span>
+                        <Status active={csvUploaded}>
+                          {csvUploaded ? (
+                            <>
+                              <CheckCircle size={18} /> Uploaded
+                            </>
+                          ) : (
+                            <>
+                              <Clock size={18} /> Pending
+                            </>
+                          )}
+                        </Status>
+                      </div>
+                    </InfoItem>
+
+                    <InfoItem>
+                      <CheckCircle size={18} />
+                      <div>
+                        <span className="label">Agent Status</span>
+                        <Status active={agentCreated}>
+                          {agentCreated ? (
+                            <>
+                              <CheckCircle size={18} /> Active
+                            </>
+                          ) : (
+                            <>
+                              <Clock size={18} /> Pending
+                            </>
+                          )}
+                        </Status>
+                      </div>
+                    </InfoItem>
+                  </InfoGrid>
+                </Card>
+
+                <Card>
+                  <h3>📤 Upload CSV Data</h3>
+                  <Input
+                    type="file"
+                    accept=".csv"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        file: e.target.files ? e.target.files[0] : null,
+                      })
+                    }
+                  />
+                  <Button
+                    onClick={handleUpload}
+                    disabled={loadingUpload}
+                    loading={loadingUpload}
+                  >
+                    {loadingUpload ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />{" "}
+                        Deploying...
+                      </>
+                    ) : (
+                      "Deploy Agent →"
+                    )}
+                  </Button>
+                </Card>
+              </>
+            )}
+          </StepWrapper>
+
+          <ToastContainer>
+            {toasts.map((t) => (
+              <Toast key={t.id} type={t.type}>
+                {t.message}
+              </Toast>
+            ))}
+          </ToastContainer>
+        </Content>
+      </WizardContainer>
+
+      {showSuccessModal && (
+        <ModalOverlay>
+          <ModalBox>
+            <h3>🎉 Agent Active!</h3>
+            <p>
+              Your AI agent is now fully deployed. Check your email for API
+              credentials and integration instructions.
+            </p>
+            <Button onClick={() => navigate("/")}>Go to Dashboard →</Button>
+          </ModalBox>
+        </ModalOverlay>
+      )}
+    </>
   );
 };
 

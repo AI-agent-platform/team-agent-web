@@ -1,5 +1,5 @@
 export enum BusinessType {
-  ECOMMERCE = "e-commerce",
+  ECOMMERCE = "online-sellers",
   AGRICULTURE = "agriculture",
   TOURISM = "tourism",
 }
