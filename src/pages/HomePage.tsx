@@ -133,7 +133,7 @@ const GetStartedButton = styled.button`
   padding: 1rem 2rem;
   font-size: 1.25rem;
   cursor: pointer;
-  margin: 3rem auto 5rem auto;
+  margin: 5rem auto 1rem auto;
   display: block;
   font-family: "Mark Medium", sans-serif;
   transition: all 0.3s ease;

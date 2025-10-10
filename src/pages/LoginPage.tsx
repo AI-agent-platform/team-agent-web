@@ -5,106 +5,325 @@ import { useAuth } from "../context/AuthContext";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar";
+import loginImage from "../Assets/authentication/login.webp";
 
-const PageBackground = styled.div`
+const PageContainer = styled.div`
+  display: flex;
   min-height: 100vh;
+  background: linear-gradient(135deg, #163c3d 0%, #163c3d 50%, #0f172a 100%);
+  position: relative;
+  margin-top: 80px;
+
+  @media (max-width: 768px) {
+    margin-top: 60px;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #163c3d;
+  padding: 40px;
+  gap: 0;
+  z-index: 10;
+  margin-right: 50%;
+
+  @media (max-width: 1024px) {
+    padding: 40px 20px;
+    margin-right: 0;
+  }
+`;
+
+const FormSection = styled.div`
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+`;
+
+const ImageSection = styled.div`
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100vh;
+  background: url(${loginImage}) no-repeat center center;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.1) 100%);
+    z-index: 1;
+  }
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
 `;
 
 const Card = styled.div`
-  background: #ffffff;
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-  width: 400px;
-  max-width: 90%;
+  background: rgba(64, 58, 232, 0.08);
+  backdrop-filter: blur(16px);
+  padding: 50px 60px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  width: 520px;
+  max-width: 100%;
   text-align: center;
+  animation: slideInUp 0.6s ease-out;
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    padding: 50px 40px;
+  }
 `;
 
 const Title = styled.h2`
-  margin-bottom: 25px;
-  color: #2c5364;
+  margin-bottom: 8px;
+  color: #ffffff;
   font-weight: 700;
-  font-size: 1.8rem;
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 `;
 
-const Input = styled.input`
+const Subtitle = styled.p`
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  font-weight: 400;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 22px;
+  text-align: left;
+`;
+
+const Label = styled.label`
+  display: block;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const Input = styled.input<{ hasError?: boolean; isValid?: boolean }>`
   width: 100%;
-  padding: 12px 15px;
-  margin: 10px 0;
+  padding: 14px 16px 14px 45px;
   border-radius: 12px;
-  border: 1px solid #ccc;
+  border: 2px solid ${(props) =>
+    props.hasError ? "#ef4444" : props.isValid ? "#10b981" : "rgba(148, 163, 184, 0.3)"};
+  background: rgba(255, 255, 255, 0.08);
   font-size: 1rem;
-  transition: all 0.2s;
+  color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+
+  &::placeholder {
+    color: #64748b;
+  }
 
   &:focus {
     outline: none;
-    border-color: #0072ff;
-    box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:hover {
+    border-color: ${(props) => (props.hasError ? "#ef4444" : "rgba(148, 163, 184, 0.5)")};
+  }
+`;
+
+const IconContainer = styled.span`
+  position: absolute;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 1.2rem;
+  transition: color 0.3s;
+`;
+
+const ErrorMessage = styled.div`
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
 const Button = styled.button<{ disabled?: boolean }>`
   width: 100%;
-  padding: 12px;
-  margin-top: 15px;
+  padding: 14px 20px;
+  margin-top: 28px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
   color: white;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-  &:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 114, 255, 0.3);
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 `;
 
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 30px 0;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+  }
+`;
+
+const DividerText = styled.span`
+  color: #64748b;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+`;
+
+const SocialButtonsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+`;
+
 const SwitchLink = styled.div`
-  margin-top: 18px;
+  margin-top: 24px;
   font-size: 0.95rem;
-  color: #2c5364;
+  color: #94a3b8;
+
   a {
-    color: #00c6ff;
+    color: #60a5fa;
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.2s;
+    transition: all 0.3s;
+
     &:hover {
-      color: #0072ff;
+      color: #06b6d4;
       text-decoration: underline;
     }
   }
 `;
 
-const ErrorMsg = styled.div`
-  color: #fff;
-  background: #d32f2f;
-  border-radius: 6px;
-  padding: 10px 0;
-  text-align: center;
-  margin-bottom: 12px;
-  font-size: 0.95rem;
+const ForgotPasswordLink = styled.div`
+  margin-top: 16px;
+  font-size: 0.9rem;
+
+  a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+
+    &:hover {
+      color: #06b6d4;
+      text-decoration: underline;
+    }
+  }
+`;
+
+const LoaderSpinner = styled.span`
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 `;
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, googleLogin } = useAuth();
   const [isPending, setIsPending] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsPending(true);
     setErrorMsg(null);
+    setIsPending(true);
 
     login(
       { email, password },
@@ -137,42 +356,80 @@ const LoginPage: React.FC = () => {
   return (
     <>
       <Navbar />
-      <PageBackground>
-        <Card>
-          <Title>Login</Title>
-          {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
-          <form onSubmit={handleSubmit}>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Logging in..." : "Login"}
-            </Button>
-          </form>
+      <PageContainer>
+        <ContentWrapper>
+          <FormSection>
+            <Card>
+              <Title>Welcome Back</Title>
+              <Subtitle>Sign in to your account</Subtitle>
 
-          <div style={{ margin: "20px 0" }}>
-            <GoogleLogin
-              onSuccess={handleGoogleLogin}
-              onError={() => toast.error("Google login failed")}
-            />
-          </div>
+              {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
 
-          <SwitchLink>
-            Don't have an account? <Link to="/signup">Sign Up</Link>
-          </SwitchLink>
-        </Card>
-      </PageBackground>
+              <form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label>Email Address</Label>
+                  <InputWrapper>
+                    <IconContainer>📧</IconContainer>
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </InputWrapper>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label>Password</Label>
+                  <InputWrapper>
+                    <IconContainer>🔐</IconContainer>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </InputWrapper>
+                </FormGroup>
+
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <LoaderSpinner />
+                      Logging in...
+                    </>
+                  ) : (
+                    "Sign In"
+                  )}
+                </Button>
+              </form>
+
+              <ForgotPasswordLink>
+                <a href="#">Forgot password?</a>
+              </ForgotPasswordLink>
+
+              <Divider>
+                <DividerText>OR CONTINUE WITH</DividerText>
+              </Divider>
+
+              <SocialButtonsContainer>
+                <GoogleLogin
+                  onSuccess={handleGoogleLogin}
+                  onError={() => toast.error("Google login failed")}
+                />
+              </SocialButtonsContainer>
+
+              <SwitchLink>
+                Don't have an account? <Link to="/signup">Create one</Link>
+              </SwitchLink>
+            </Card>
+          </FormSection>
+        </ContentWrapper>
+
+        <ImageSection />
+      </PageContainer>
     </>
   );
 };

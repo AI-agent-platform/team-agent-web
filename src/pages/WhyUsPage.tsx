@@ -181,7 +181,7 @@ const WhyUs = () => {
             }
 
             const direction = index === 0 ? "left" : "right";
-            const delay = 0.6; // optional delay for smoother stagger
+            const delay = 0.1;  
 
             return (
               <SlideInFromSide key={index} from={direction} delay={delay}>
