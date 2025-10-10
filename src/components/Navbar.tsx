@@ -29,17 +29,11 @@ const Navbar = () => {
 
   return (
     <nav>
-      <ScrollLink
-        style={{ cursor: "pointer" }}
-        to="hero"
-        smooth={true}
-        duration={500}
-        offset={-100}
-      >
+      <Link to="/" style={{ cursor: "pointer" }}>
         <div className="nav-logo-container">
-          <img src={Logo} alt="" />
+          <img src={Logo} alt="Logo" />
         </div>
-      </ScrollLink>
+      </Link>
       <div className="navbar-links-container">
         <ScrollLink
           style={{ cursor: "pointer" }}
@@ -84,7 +78,9 @@ const Navbar = () => {
         )}
 
         {isUserLoggedIn ? (
-          <ScrollLink style={{ cursor: "pointer" }} onClick={logout}>Logout</ScrollLink>
+          <ScrollLink style={{ cursor: "pointer" }} onClick={logout}>
+            Logout
+          </ScrollLink>
         ) : (
           <ScrollLink
             onClick={() => Navigate("/login")}
