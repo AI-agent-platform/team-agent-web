@@ -17,6 +17,13 @@ import {
   Briefcase,
   Loader2,
 } from "lucide-react";
+import {
+  validateContact,
+  validateEmail,
+  validateField,
+  validateName,
+} from "../utils/auth/inputValidators.utils";
+import { InputField } from "../components/form-components/InputField";
 
 // ================== Animations ==================
 const fadeIn = keyframes`
@@ -32,6 +39,37 @@ const WizardContainer = styled.div`
   color: #e2e8f0;
 `;
 
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+const Input = styled.input<{ error?: boolean }>`
+  width: 100%;
+  padding: 16px 18px;
+  margin: 14px 0;
+  border: 2px solid
+    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.5);
+  color: #e2e8f0;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ error }) =>
+      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+  }
+`;
+
+const ErrorMessage = styled.span`
+  color: #ef4444;
+  font-size: 13px;
+  display: block;
+  margin: -12px 0 14px 18px;
+  font-weight: 500;
+`;
 const Content = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -140,25 +178,23 @@ const Status = styled.div<{ active?: boolean }>`
   }
 `;
 
-const Input = styled.input`
+const Select = styled.select<{ error?: boolean }>`
   width: 100%;
   padding: 16px 18px;
   margin: 14px 0;
-  border: 2px solid rgba(99, 102, 241, 0.2);
+  border: 2px solid
+    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
   border-radius: 14px;
   background: rgba(15, 23, 42, 0.5);
   color: #e2e8f0;
-  font-size: 15px;
-`;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 
-const Select = styled.select`
-  width: 100%;
-  padding: 16px 18px;
-  margin: 14px 0;
-  border: 2px solid rgba(99, 102, 241, 0.2);
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.5);
-  color: #e2e8f0;
+  &:focus {
+    outline: none;
+    border-color: ${({ error }) =>
+      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+  }
 `;
 
 const Button = styled.button<{ loading?: boolean }>`
@@ -243,11 +279,12 @@ const ModalBox = styled.div`
   }
 `;
 
+// ================== Main Component ==================
 const CreateAgents: React.FC = () => {
   const [step, setStep] = useState(0);
   const [csvUploaded, setCsvUploaded] = useState(false);
   const [agentCreated, setAgentCreated] = useState(false);
-  const [uid,setUid] = useState('');
+  const [uid, setUid] = useState("");
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [formData, setFormData] = useState({
@@ -256,6 +293,12 @@ const CreateAgents: React.FC = () => {
     email: "",
     field: "",
     file: null as File | null,
+  });
+  const [touched, setTouched] = useState({
+    name: false,
+    contact: false,
+    email: false,
+    field: false,
   });
   const [toasts, setToasts] = useState<
     { id: number; message: string; type: "success" | "error" }[]
@@ -279,7 +322,7 @@ const CreateAgents: React.FC = () => {
             field: b.field || "",
             file: null,
           });
-          setUid(b.ownerUid)
+          setUid(b.ownerUid);
           setCsvUploaded(!!b.csvUploaded);
           if (b.csvUploaded) {
             setAgentCreated(true);
@@ -300,21 +343,27 @@ const CreateAgents: React.FC = () => {
     );
   };
 
+  const isFormValid = (): boolean => {
+    return (
+      validateName(formData.name).valid &&
+      validateEmail(formData.email).valid &&
+      validateContact(formData.contact).valid &&
+      validateField(formData.field).valid
+    );
+  };
+
   const handleCreateBusiness = () => {
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.contact ||
-      !formData.field
-    ) {
-      addToast("Please fill all fields!", "error");
+    setTouched({ name: true, email: true, contact: true, field: true });
+
+    if (!isFormValid()) {
+      addToast("Please fill all fields correctly!", "error");
       return;
     }
 
     setLoadingCreate(true);
     createBusiness(formData, {
       onSuccess: () => {
-        addToast("Business created successfully!", "success");        
+        addToast("Business created successfully!", "success");
         setStep(1);
       },
       onError: () => addToast("Business creation failed.", "error"),
@@ -365,46 +414,71 @@ const CreateAgents: React.FC = () => {
 
           <StepWrapper isTwoColumn={step === 1}>
             {step === 0 ? (
-              <Card>
+              <Card style={{ width: "100%" }}>
                 <h3>📋 Business Details</h3>
-                <Input
-                  placeholder="Business Name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                />
-                <Input
-                  placeholder="Contact Number"
-                  value={formData.contact}
-                  onChange={(e) =>
-                    setFormData({ ...formData, contact: e.target.value })
-                  }
-                />
-                <Input
-                  type="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-                <Select
-                  value={formData.field}
-                  onChange={(e) =>
-                    setFormData({ ...formData, field: e.target.value })
-                  }
-                >
-                  <option value="">Select Industry Field</option>
-                  {Object.values(BusinessType).map((field) => (
-                    <option key={field} value={field}>
-                      {field}
-                    </option>
-                  ))}
-                </Select>
+                <div style={{ width: "100%" }}>
+                  <InputField
+                    placeholder="Business Name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    validator={validateName}
+                    touched={touched.name}
+                    onBlur={() => setTouched({ ...touched, name: true })}
+                  />
+                  <InputField
+                    placeholder="Contact Number"
+                    value={formData.contact}
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+                      setFormData({ ...formData, contact: digitsOnly });
+                    }}
+                    validator={validateContact}
+                    touched={touched.contact}
+                    onBlur={() => setTouched({ ...touched, contact: true })}
+                  />
+                  <InputField
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    validator={validateEmail}
+                    touched={touched.email}
+                    onBlur={() => setTouched({ ...touched, email: true })}
+                  />
+                  <InputWrapper>
+                    <Select
+                      value={formData.field}
+                      onChange={(e) =>
+                        setFormData({ ...formData, field: e.target.value })
+                      }
+                      onBlur={() => setTouched({ ...touched, field: true })}
+                      error={
+                        touched.field && !validateField(formData.field).valid
+                      }
+                    >
+                      <option value="">Select Industry Field</option>
+                      {Object.values(BusinessType).map((field) => (
+                        <option key={field} value={field}>
+                          {field}
+                        </option>
+                      ))}
+                    </Select>
+                    {touched.field && !validateField(formData.field).valid && (
+                      <ErrorMessage>
+                        {validateField(formData.field).error}
+                      </ErrorMessage>
+                    )}
+                  </InputWrapper>
+                </div>
                 <Button
                   onClick={handleCreateBusiness}
-                  disabled={loadingCreate}
+                  disabled={loadingCreate || !isFormValid()}
                   loading={loadingCreate}
                 >
                   {loadingCreate ? (
@@ -419,7 +493,7 @@ const CreateAgents: React.FC = () => {
             ) : (
               <>
                 <Card>
-                  <h3>✅ Business Summary</h3>
+                  <h3>You have successfully craeted your agents. Now lets input your business data for accurate response</h3>
                   <InfoGrid>
                     <InfoItem>
                       <Building2 size={18} />

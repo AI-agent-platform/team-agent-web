@@ -6,6 +6,7 @@ import { validatePassword } from "../utils/auth/auth.utils";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
 
 const PageBackground = styled.div`
   min-height: 100vh;
@@ -157,55 +158,58 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <PageBackground>
-      <Card>
-        <Title>Sign Up</Title>
-        {/* {(localError || isError) && (
+    <>
+      <Navbar />
+      <PageBackground>
+        <Card>
+          <Title>Sign Up</Title>
+          {/* {(localError || isError) && (
           <ErrorMsg>
             {localError ||
               (error as any)?.response?.data?.message ||
               "Sign up failed"}
           </ErrorMsg>
         )} */}
-        <form onSubmit={handleSubmit}>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Creating..." : "Create Account"}
-          </Button>
-        </form>
+          <form onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Account"}
+            </Button>
+          </form>
 
-        <div style={{ margin: "20px 0" }}>
-          <GoogleLogin
-            onSuccess={handleGoogleSignUp}
-            onError={() => toast.error("Google signup failed")}
-          />
-        </div>
+          <div style={{ margin: "20px 0" }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSignUp}
+              onError={() => toast.error("Google signup failed")}
+            />
+          </div>
 
-        <SwitchLink>
-          Already have an account? <Link to="/login">Login</Link>
-        </SwitchLink>
-      </Card>
-    </PageBackground>
+          <SwitchLink>
+            Already have an account? <Link to="/login">Login</Link>
+          </SwitchLink>
+        </Card>
+      </PageBackground>
+    </>
   );
 };
 
