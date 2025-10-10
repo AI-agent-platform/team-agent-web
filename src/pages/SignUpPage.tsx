@@ -6,6 +6,7 @@ import { validatePassword } from "../utils/auth/auth.utils";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
 
 const PageBackground = styled.div`
   min-height: 100vh;
@@ -265,80 +266,58 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <PageBackground>
-      <Card>
-        <DecorativeCircle top="-140px" left="-100px" />
-        <DecorativeAccent top="-80px" right="-80px" />
-        <DecorativeCircle bottom="-140px" right="-100px" />
-        <DecorativeAccent bottom="-80px" left="-80px" />
-        
-        <ContentWrapper>
-          <Title>Sign up</Title>
-
+    <>
+      <Navbar />
+      <PageBackground>
+        <Card>
+          <Title>Sign Up</Title>
+          {/* {(localError || isError) && (
+          <ErrorMsg>
+            {localError ||
+              (error as any)?.response?.data?.message ||
+              "Sign up failed"}
+          </ErrorMsg>
+        )} */}
           <form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="email">User Name</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="johndoe@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="••••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <SubmitButton type="submit" disabled={isPending}>
-              {isPending ? (
-                <span>...</span>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              )}
-            </SubmitButton>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Account"}
+            </Button>
           </form>
 
-          <Divider>OR</Divider>
-
-          <GoogleButtonWrapper>
+          <div style={{ margin: "20px 0" }}>
             <GoogleLogin
               onSuccess={handleGoogleSignUp}
               onError={() => toast.error("Google signup failed")}
-              width="100%"
             />
-          </GoogleButtonWrapper>
+          </div>
 
           <SwitchLink>
-            Already member? <Link to="/login">Sign in</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </SwitchLink>
-        </ContentWrapper>
-      </Card>
-    </PageBackground>
+        </Card>
+      </PageBackground>
+    </>
   );
 };
 

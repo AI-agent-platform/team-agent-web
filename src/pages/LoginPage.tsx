@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
 
 const PageBackground = styled.div`
   min-height: 100vh;
@@ -133,7 +134,6 @@ const SubmitButton = styled.button<{ disabled?: boolean }>`
   align-items: center;
   justify-content: center;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 
   &:hover {
     transform: ${({ disabled }) => (disabled ? 'none' : 'scale(1.05)')};
@@ -258,69 +258,45 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <PageBackground>
-      <Card>
-        <DecorativeCircle top="-140px" left="-100px" />
-        <DecorativeAccent top="-80px" right="-80px" />
-        <DecorativeCircle bottom="-140px" right="-100px" />
-        <DecorativeAccent bottom="-80px" left="-80px" />
-        
-        <ContentWrapper>
-          <Title>Sign In</Title>
-
+    <>
+      <Navbar />
+      <PageBackground>
+        <Card>
+          <Title>Login</Title>
+          {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
           <form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label htmlFor="email">User Name</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="johndoe@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              
-            </FormGroup>
-
-            <SubmitButton type="submit" disabled={isPending}>
-              {isPending ? (
-                <span>...</span>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              )}
-            </SubmitButton>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Logging in..." : "Login"}
+            </Button>
           </form>
 
-          <Divider>OR</Divider>
-
-          <GoogleButtonWrapper>
+          <div style={{ margin: "20px 0" }}>
             <GoogleLogin
               onSuccess={handleGoogleLogin}
               onError={() => toast.error("Google login failed")}
-              width="100%"
             />
-          </GoogleButtonWrapper>
+          </div>
 
           <SwitchLink>
-            New member? <Link to="/signup">Sign up</Link>
+            Don't have an account? <Link to="/signup">Sign Up</Link>
           </SwitchLink>
-        </ContentWrapper>
-      </Card>
-    </PageBackground>
+        </Card>
+      </PageBackground>
+    </>
   );
 };
 
