@@ -9,7 +9,7 @@ import {
 } from "./dto/agent.dto";
 
 const NestBaseUrl = process.env.REACT_APP_NEST_API;
-const FileUploadUrl = process.env.FAST_API_FILE_UPLOAD_URL;
+const FileUploadUrl = process.env.FAST_API_FILE_UPLOAD_URL || 'https://fastapi-rag-service-iuxrsvfyvq-uc.a.run.app/v1/documents/ingest/csv';
 const API_URL = `${NestBaseUrl}/business`;
 const DjangoBaseUrl = process.env.REACT_APP_DJANGO_API;
 
@@ -39,7 +39,7 @@ export async function answerFieldQuestion(payload: FieldAnswerPayload) {
 export async function uploadFile(payload: FileUploadPayload, token?: string) {
   const formData = new FormData();
   formData.append("csv_file", payload.file);
-  formData.append("business_uuid", payload.business_uuid);
+  formData.append("business_uuid", '68ef8075ee31867bf85a5f36');
 
   const { data } = await axios.post(
     `${FileUploadUrl}/`,

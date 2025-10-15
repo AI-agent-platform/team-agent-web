@@ -41,9 +41,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onError: (error: any) => void
   ) => {
     loginMutate(payload, {
-      onSuccess: (data) => {
-        localStorage.setItem("access_token", data.access_token);
-        setToken(data.access_token);
+      onSuccess: (data) => {        
+        localStorage.setItem("access_token", data.accessToken);
+        setToken(data.accessToken);
         setIsUserLoggedIn(true);
         onSuccess?.(data);
         navigate("/home");
