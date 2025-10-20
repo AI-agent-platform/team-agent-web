@@ -39,7 +39,7 @@ export async function answerFieldQuestion(payload: FieldAnswerPayload) {
 export async function uploadFile(payload: FileUploadPayload, token?: string) {
   const formData = new FormData();
   formData.append("csv_file", payload.file);
-  formData.append("business_uuid", '68ef8075ee31867bf85a5f36');
+  formData.append("business_uuid", payload.business_uuid);
 
   const { data } = await axios.post(
     `${FileUploadUrl}/`,
