@@ -7,7 +7,7 @@ const FooterWrapper = styled.footer`
   bottom: 12px;
   display: flex;
   width: 100%;
-  height: 370px;
+  height: 270px;
 `;
 
 const Background = styled.div`
@@ -84,8 +84,8 @@ const Footer: React.FC = () => {
         <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="bg" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#163c3d" />
-              <stop offset="100%" stopColor="#96f553ff" />
+              <stop offset="0%" stopColor="#b1eaecff" />
+              <stop offset="100%" stopColor="#dbf4caff" />
             </linearGradient>
             <path
               id="wave"

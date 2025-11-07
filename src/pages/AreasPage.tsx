@@ -9,12 +9,12 @@ import { FadeInWhenVisible } from "../components/FramerMotion";
 
 const Wrapper = styled.div`
   padding: 4rem 2rem;
-  background-color: #ecfdf5;
+  background-color: #dae7e6;
 `;
 
 const Heading = styled.h1`
   font-size: 3rem;
-  color: #0fcb8c;
+  color: #454645ff;
   margin-bottom: 1.5rem;
   margin-left: 300px;
   text-align: left;
@@ -104,8 +104,8 @@ const GridItem = styled(motion.div)`
     opacity: 1;
     background-image: linear-gradient(
       125deg,
-      rgba(22, 60, 61, 0.9),
-      rgba(15, 203, 140, 0.9)
+      rgba(95, 123, 223, 0.9),
+      rgba(136, 137, 140, 0.9)
     );
   }
 

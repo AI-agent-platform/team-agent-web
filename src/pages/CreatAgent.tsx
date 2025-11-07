@@ -31,102 +31,108 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
+// ================== Modern Metallic Theme ==================
 const WizardContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172e 0%, #1a2847 50%, #0f3a5e 100%);
+  background: linear-gradient(135deg, #0a0f1c 0%, #1c2b3a 40%, #0e1a26 100%);
   padding: 60px 20px;
   font-family: "Inter", sans-serif;
-  color: #e2e8f0;
+  color: #e0f2ff;
 `;
 
 const InputWrapper = styled.div`
   position: relative;
   width: 100%;
 `;
+
 const Input = styled.input<{ error?: boolean }>`
   width: 100%;
   padding: 16px 18px;
   margin: 14px 0;
-  border: 2px solid
-    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.5);
-  color: #e2e8f0;
+  border: 1.8px solid ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  color: #e0f2ff;
   font-size: 15px;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: ${({ error }) =>
-      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+    border-color: ${({ error }) => (error ? "#ff4d4d" : "#4da6ff")};
+    box-shadow: 0 0 10px rgba(77, 166, 255, 0.3);
+  }
+
+  &::placeholder {
+    color: #9eaec6;
   }
 `;
 
 const ErrorMessage = styled.span`
-  color: #ef4444;
+  color: #ff4d4d;
   font-size: 13px;
   display: block;
-  margin: -12px 0 14px 18px;
+  margin: -10px 0 12px 18px;
   font-weight: 500;
 `;
+
 const Content = styled.div`
   max-width: 1200px;
   margin: 0 auto;
 `;
 
 const Title = styled.h2`
-  font-size: 42px;
+  font-size: 40px;
   font-weight: 700;
   text-align: center;
   margin-bottom: 10px;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: linear-gradient(135deg, #4da6ff, #67e8f9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
 
 const Subtitle = styled.p`
   text-align: center;
-  color: #94a3b8;
+  color: #9eaec6;
   font-size: 16px;
   margin-bottom: 50px;
 `;
 
 const StepWrapper = styled.div<{ isTwoColumn?: boolean }>`
   display: ${({ isTwoColumn }) => (isTwoColumn ? "grid" : "flex")};
-  grid-template-columns: ${({ isTwoColumn }) =>
-    isTwoColumn ? "1fr 1fr" : "1fr"};
+  grid-template-columns: ${({ isTwoColumn }) => (isTwoColumn ? "1fr 1fr" : "1fr")};
   gap: 30px;
   align-items: flex-start;
-  animation: ${fadeIn} 0.4s ease;
+  animation: ${fadeIn} 0.5s ease;
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
 `;
 
 const Card = styled.div`
-  background: rgba(30, 41, 82, 0.75);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(77, 166, 255, 0.25);
+  border-radius: 20px;
   padding: 35px 40px;
   transition: all 0.3s ease;
+  box-shadow: 0 0 25px rgba(77, 166, 255, 0.08);
 
   &:hover {
-    border-color: rgba(99, 102, 241, 0.6);
-    box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+    border-color: rgba(77, 166, 255, 0.5);
+    box-shadow: 0 0 35px rgba(77, 166, 255, 0.2);
   }
 
   h3 {
     font-size: 22px;
     font-weight: 700;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
+    background: linear-gradient(135deg, #4da6ff, #67e8f9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 24px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 `;
 
@@ -145,17 +151,23 @@ const InfoItem = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(99, 102, 241, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 166, 255, 0.2);
   padding: 12px 15px;
   border-radius: 10px;
+  transition: 0.25s;
+
+  &:hover {
+    border-color: #4da6ff;
+    box-shadow: 0 0 10px rgba(77, 166, 255, 0.15);
+  }
 
   svg {
-    color: #818cf8;
+    color: #4da6ff;
   }
 
   span.label {
-    color: #94a3b8;
+    color: #9eaec6;
     font-size: 13px;
     display: block;
   }
@@ -163,6 +175,7 @@ const InfoItem = styled.div`
   span.value {
     font-weight: 500;
     font-size: 15px;
+    color: #e0f2ff;
   }
 `;
 
@@ -171,7 +184,7 @@ const Status = styled.div<{ active?: boolean }>`
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: ${({ active }) => (active ? "#22c55e" : "#fbbf24")};
+  color: ${({ active }) => (active ? "#4ade80" : "#fbbf24")};
 
   svg {
     flex-shrink: 0;
@@ -182,28 +195,26 @@ const Select = styled.select<{ error?: boolean }>`
   width: 100%;
   padding: 16px 18px;
   margin: 14px 0;
-  border: 2px solid
-    ${({ error }) => (error ? "#ef4444" : "rgba(99, 102, 241, 0.2)")};
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.5);
-  color: #e2e8f0;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  border: 1.8px solid ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e0f2ff;
+  transition: 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: ${({ error }) =>
-      error ? "#ef4444" : "rgba(99, 102, 241, 0.6)"};
+    border-color: ${({ error }) => (error ? "#ff4d4d" : "#4da6ff")};
+    box-shadow: 0 0 10px rgba(77, 166, 255, 0.3);
   }
 `;
 
 const Button = styled.button<{ loading?: boolean }>`
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #4da6ff 0%, #67e8f9 100%);
+  color: #0a0f1c;
   border: none;
   padding: 16px 32px;
   font-size: 15px;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   margin-top: 24px;
   transition: all 0.3s ease;
@@ -212,10 +223,11 @@ const Button = styled.button<{ loading?: boolean }>`
   align-items: center;
   justify-content: center;
   gap: 10px;
+  box-shadow: 0 0 20px rgba(77, 166, 255, 0.2);
 
   &:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 30px rgba(77, 166, 255, 0.4);
   }
 
   &:disabled {
@@ -234,8 +246,8 @@ const ToastContainer = styled.div`
 const Toast = styled.div<{ type: "success" | "error" }>`
   background: ${({ type }) =>
     type === "success"
-      ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
-      : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)"};
+      ? "linear-gradient(135deg, #4ade80, #22c55e)"
+      : "linear-gradient(135deg, #ff4d4d, #dc2626)"};
   color: white;
   padding: 16px 20px;
   border-radius: 12px;
@@ -246,38 +258,40 @@ const Toast = styled.div<{ type: "success" | "error" }>`
 const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 10, 20, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(6px);
 `;
 
 const ModalBox = styled.div`
   background: linear-gradient(
     135deg,
-    rgba(30, 41, 82, 0.95),
-    rgba(51, 65, 117, 0.8)
+    rgba(15, 23, 35, 0.95),
+    rgba(25, 38, 56, 0.85)
   );
   padding: 50px;
-  border-radius: 24px;
+  border-radius: 22px;
   max-width: 450px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 40px rgba(77, 166, 255, 0.25);
+  border: 1px solid rgba(77, 166, 255, 0.3);
 
   h3 {
-    color: #a78bfa;
+    color: #67e8f9;
     font-size: 26px;
     margin-bottom: 16px;
   }
 
   p {
-    color: #cbd5e1;
+    color: #9eaec6;
     font-size: 15px;
     margin-bottom: 32px;
   }
 `;
+
 
 // ================== Main Component ==================
 const CreateAgents: React.FC = () => {

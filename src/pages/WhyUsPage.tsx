@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { SlideInFromSide } from "../components/FramerMotion";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const Wrapper = styled.div`
   padding: 4rem 6rem;
@@ -33,7 +34,7 @@ const SubWrapper = styled.div`
 
 const Heading = styled.h1`
   font-size: 3rem;
-  color: #0fcb8c;
+  color: #454645ff;
   margin-bottom: 1.5rem;
   margin-left: 300px;
 
@@ -90,12 +91,6 @@ const GridItem = styled.div`
     background-color: #ecfdf5;
   }
 
-  img {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 1rem;
-  }
-
   h3 {
     font-size: 1.2rem;
     font-weight: bold;
@@ -131,19 +126,19 @@ const WhyUs = () => {
   const advantages = [
     {
       title: "Smart AI Insights",
-      img: "https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a539648a39d53dc75f_hh1.svg",
+      animation: "https://lottie.host/a1a3f233-acdb-4392-ae28-e0e0515d0ec7/7XbJUosezD.lottie",
       details:
         "Leverage AI-driven analytics to make smarter decisions, predict trends, and optimize operations across your business. Get actionable insights in real time to improve strategy and performance.",
     },
     {
       title: "24/7 Support",
-      img: "https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a5580c5ed45b5b671a_hh2.svg",
+      animation: "https://lottie.host/71f9878d-03a4-4271-a465-5dc43c643fef/RWWesJySCC.lottie",
       details:
         "Our customer support is available round the clock to assist you with queries, troubleshooting, and implementation guidance. You are never left stuck or waiting.",
     },
     {
       title: "Increased Efficiency",
-      img: "https://cdn.prod.website-files.com/64abaf64480a5f17c04722a1/65a647a5ad1c0c20dd8997f7_hh3.svg",
+      animation: "https://lottie.host/3e5f2221-9b1c-433c-826b-07d946d133c0/WZr5lvOyWx.lottie",
       details:
         "Automate repetitive tasks and workflows, freeing up valuable time for your team to focus on high-priority initiatives. Boost productivity across all business operations.",
     },
@@ -156,7 +151,7 @@ const WhyUs = () => {
         <Text>
           Discover the key advantages our platform offers, helping businesses
           streamline operations, boost performance, and stay ahead of the
-          competition.Our platform empowers businesses to harness the power of
+          competition. Our platform empowers businesses to harness the power of
           AI without needing technical expertise or expensive resources. We
           offer intelligent automation, actionable insights, and 24/7 support,
           enabling you to streamline operations, boost productivity, and make
@@ -167,31 +162,28 @@ const WhyUs = () => {
 
         <GridContainer>
           {advantages.map((item, index) => {
-            // First and third items animate, middle stays static
-            if (index === 1) {
-              return (
-                <GridItem key={index}>
-                  <img src={item.img} alt={item.title} />
-                  <h3>{item.title}</h3>
-                  <div className="details">
-                    <p>{item.details}</p>
-                  </div>
-                </GridItem>
-              );
-            }
+            const direction = index === 0 ? "left" : index === 2 ? "right" : "none";
+            const delay = 0.1;
 
-            const direction = index === 0 ? "left" : "right";
-            const delay = 0.1;  
+            const CardContent = (
+              <GridItem key={index}>
+                <DotLottieReact
+                  src={item.animation}
+                  loop
+                  autoplay
+                  style={{ width: "100px", height: "100px", marginBottom: "1rem" }}
+                />
+                <h3>{item.title}</h3>
+                <div className="details">
+                  <p>{item.details}</p>
+                </div>
+              </GridItem>
+            );
 
+            if (direction === "none") return CardContent;
             return (
               <SlideInFromSide key={index} from={direction} delay={delay}>
-                <GridItem>
-                  <img src={item.img} alt={item.title} />
-                  <h3>{item.title}</h3>
-                  <div className="details">
-                    <p>{item.details}</p>
-                  </div>
-                </GridItem>
+                {CardContent}
               </SlideInFromSide>
             );
           })}

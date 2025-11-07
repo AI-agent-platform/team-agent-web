@@ -11,7 +11,7 @@ import About from "./AboutPage";
 import Contact from "./ContactPage";
 import Footer from "../components/Footer";
 import { Link as ScrollLink } from "react-scroll";
-import BackgroundImg from "../Assets/background-assets/a.webp";
+import BackgroundImg from "../Assets/background-assets/d.png";
 import TechSlider from "../components/TechSlider";
 import Areas from "./AreasPage";
 import WhyUse from "./WhyUsPage";
@@ -36,6 +36,7 @@ const HeroTitle = styled.h1`
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 1rem;
+  
 
   @media (min-width: 768px) {
     font-size: 4rem;

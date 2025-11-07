@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { SlideInFromSide } from "../components/FramerMotion";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // <-- make sure this is your auth hook path
-import { toast } from "react-toastify"; // <-- make sure you've installed react-toastify
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import OwnerAgentImg from "../Assets/what-we-offer/owner-agent.jpg";
@@ -125,8 +125,11 @@ const Overlay = styled.div`
   }
 `;
 
+/* ✅ Animated Get Started Button (Shimmer Effect) */
 const GetStartedButton = styled.button`
-  background-color: #0fcb8c;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #5d86b6ff, #2c2c2c);
   color: white;
   border: none;
   border-radius: 30px;
@@ -138,10 +141,37 @@ const GetStartedButton = styled.button`
   font-family: "Mark Medium", sans-serif;
   transition: all 0.3s ease;
 
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+    transform: skewX(-20deg);
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -75%;
+    }
+    100% {
+      left: 125%;
+    }
+  }
+
   &:hover {
-    background-color: #0ca875;
+    background: #bfced2;
+    color: #101010ff;
     transform: translateY(-3px);
-    box-shadow: 0px 4px 10px rgba(15, 203, 140, 0.3);
+    box-shadow: 0px 4px 10px rgba(125, 127, 126, 0.3);
   }
 
   @media (max-width: 768px) {
@@ -152,13 +182,13 @@ const GetStartedButton = styled.button`
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isUserLoggedIn } = useAuth(); // your auth context must return this
+  const { isUserLoggedIn } = useAuth();
 
   const handleGetStarted = () => {
     if (isUserLoggedIn) {
       navigate("/create-agent");
     } else {
-      toast.info("Lets start by creating free account.", {
+      toast.info("Let's start by creating a free account.", {
         position: "top-center",
         autoClose: 3000,
       });
@@ -170,7 +200,7 @@ const Home = () => {
     <div className="home-container">
       <div className="home-banner-container" id="home">
         <HomeTextSection>
-          <h1 style={{ color: "#0fcb8c" }}>What We Offer</h1>
+          <h1 style={{ color: "#454645ff" }}>What We Offer</h1>
           <p
             style={{
               color: "#ffffffff",
@@ -187,10 +217,8 @@ const Home = () => {
         </HomeTextSection>
 
         <SplitSection>
-          {/* Owner Agent - slides in from left */}
           <SlideInFromSide from="left" duration={1.2} delay={0.2}>
             <SectionHalf
-              className="left-section"
               style={{ backgroundImage: `url(${OwnerAgentImg})` }}
               onClick={() => navigate("/owner-agent")}
             >
@@ -204,10 +232,8 @@ const Home = () => {
             </SectionHalf>
           </SlideInFromSide>
 
-          {/* Customer Agent - slides in from right */}
           <SlideInFromSide from="right" duration={1.2} delay={0.4}>
             <SectionHalf
-              className="right-section"
               style={{ backgroundImage: `url(${CustomerAgentImg})` }}
               onClick={() => navigate("/customer-agent")}
             >
@@ -222,7 +248,6 @@ const Home = () => {
           </SlideInFromSide>
         </SplitSection>
 
-        {/* Get Started Button */}
         <GetStartedButton onClick={handleGetStarted}>
           Get Started
         </GetStartedButton>
