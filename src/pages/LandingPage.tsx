@@ -11,7 +11,7 @@ import About from "./AboutPage";
 import Contact from "./ContactPage";
 import Footer from "../components/Footer";
 import { Link as ScrollLink } from "react-scroll";
-import BackgroundImg from "../Assets/background-assets/d.png";
+import BackgroundImg from "../Assets/background-assets/v.png";
 import TechSlider from "../components/TechSlider";
 import Areas from "./AreasPage";
 import WhyUse from "./WhyUsPage";
@@ -22,15 +22,18 @@ const HeroBackground = styled.section`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  height: 110vh;
   display: flex;
   flex-flow: column;
   justify-content: center;
-  align-items: center;
+  align-items: left;
   position: relative;
   color: white;
-  text-align: center;
+  padding-left: 40px;
+  padding-top: 120px;
+  text-align: left;
 `;
+
 
 const HeroTitle = styled.h1`
   font-size: 3rem;
@@ -54,11 +57,9 @@ const HeroSubtitle = styled.p`
 `;
 
 const MouseScroll = styled.div`
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-
   .mouse {
     width: 40px;
     height: 70px;
@@ -72,7 +73,7 @@ const MouseScroll = styled.div`
   .wheel {
     width: 5px;
     height: 12px;
-    background: black; /* black wheel */
+    background: black;
     border-radius: 3px;
     position: absolute;
     top: 10px;
@@ -126,7 +127,8 @@ const HeroPage = () => {
       <section id="hero">
         <HeroBackground>
           <FadeInWhenVisible>
-            <HeroTitle>Build Your AI Agent with Ease</HeroTitle>
+            <HeroTitle>Build Your AI Agent</HeroTitle>
+            <HeroTitle>With Ease</HeroTitle>
             <HeroSubtitle>
               No code. No hassle. Just results. Create chatbots that actually
               work with your business.
@@ -148,8 +150,6 @@ const HeroPage = () => {
           </ScrollLink>
         </HeroBackground>
       </section>
-
-      <ChatWidget />
 
       <section id="intro">
         <Intro />
