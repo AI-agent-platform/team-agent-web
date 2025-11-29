@@ -63,7 +63,11 @@ const ImageSection = styled.div`
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.1) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.3) 0%,
+      rgba(30, 41, 59, 0.1) 100%
+    );
     z-index: 1;
   }
 
@@ -78,7 +82,8 @@ const Card = styled.div`
   padding: 50px 60px;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   width: 520px;
   max-width: 100%;
   text-align: center;
@@ -144,8 +149,13 @@ const Input = styled.input<{ hasError?: boolean; isValid?: boolean }>`
   width: 100%;
   padding: 14px 16px 14px 45px;
   border-radius: 12px;
-  border: 2px solid ${(props) =>
-    props.hasError ? "#ef4444" : props.isValid ? "#10b981" : "rgba(148, 163, 184, 0.3)"};
+  border: 2px solid
+    ${(props) =>
+      props.hasError
+        ? "#ef4444"
+        : props.isValid
+        ? "#10b981"
+        : "rgba(148, 163, 184, 0.3)"};
   background: rgba(255, 255, 255, 0.08);
   font-size: 1rem;
   color: #ffffff;
@@ -164,7 +174,8 @@ const Input = styled.input<{ hasError?: boolean; isValid?: boolean }>`
   }
 
   &:hover {
-    border-color: ${(props) => (props.hasError ? "#ef4444" : "rgba(148, 163, 184, 0.5)")};
+    border-color: ${(props) =>
+      props.hasError ? "#ef4444" : "rgba(148, 163, 184, 0.5)"};
   }
 `;
 
@@ -193,7 +204,8 @@ const StrengthBar = styled.div<{ active: boolean; color: string }>`
   flex: 1;
   height: 4px;
   border-radius: 2px;
-  background: ${(props) => (props.active ? props.color : "rgba(148, 163, 184, 0.2)")};
+  background: ${(props) =>
+    props.active ? props.color : "rgba(148, 163, 184, 0.2)"};
   transition: all 0.3s ease;
 `;
 
@@ -219,7 +231,8 @@ const ErrorMessage = styled.p`
   animation: shake 0.3s ease-in-out;
 
   @keyframes shake {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateX(0);
     }
     25% {
@@ -282,7 +295,12 @@ const Divider = styled.div`
     content: "";
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(148, 163, 184, 0.3),
+      transparent
+    );
   }
 `;
 
@@ -398,7 +416,6 @@ const SignUpPage: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Account created! Please log in.");
       navigate("/login");
     }
   }, [isSuccess, navigate]);
@@ -422,7 +439,9 @@ const SignUpPage: React.FC = () => {
     }));
   };
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const pwd = e.target.value;
     setConfirmPassword(pwd);
     setValidation((prev) => ({
@@ -530,7 +549,9 @@ const SignUpPage: React.FC = () => {
                     />
                   </InputWrapper>
                   {email.length > 0 && !validation.emailValid && (
-                    <ErrorMessage>✕ Please enter a valid email address</ErrorMessage>
+                    <ErrorMessage>
+                      ✕ Please enter a valid email address
+                    </ErrorMessage>
                   )}
                   {validation.emailValid && (
                     <SuccessMessage>✓ Email looks good</SuccessMessage>
@@ -565,7 +586,8 @@ const SignUpPage: React.FC = () => {
                         ))}
                       </StrengthBars>
                       <StrengthText>
-                        Strength: <span>{getStrengthLabel(passwordStrength)}</span>
+                        Strength:{" "}
+                        <span>{getStrengthLabel(passwordStrength)}</span>
                       </StrengthText>
                     </PasswordStrengthContainer>
                   )}
@@ -629,7 +651,7 @@ const SignUpPage: React.FC = () => {
 
               <SwitchLink>
                 Already have an account? <Link to="/login">Sign in</Link>
-              </SwitchLink>              
+              </SwitchLink>
             </Card>
           </FormSection>
         </ContentWrapper>

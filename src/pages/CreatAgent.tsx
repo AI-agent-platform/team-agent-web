@@ -31,6 +31,11 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
 // ================== Modern Metallic Theme ==================
 const WizardContainer = styled.div`
   min-height: 100vh;
@@ -49,7 +54,8 @@ const Input = styled.input<{ error?: boolean }>`
   width: 100%;
   padding: 16px 18px;
   margin: 14px 0;
-  border: 1.8px solid ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
+  border: 1.8px solid
+    ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(6px);
@@ -100,7 +106,8 @@ const Subtitle = styled.p`
 
 const StepWrapper = styled.div<{ isTwoColumn?: boolean }>`
   display: ${({ isTwoColumn }) => (isTwoColumn ? "grid" : "flex")};
-  grid-template-columns: ${({ isTwoColumn }) => (isTwoColumn ? "1fr 1fr" : "1fr")};
+  grid-template-columns: ${({ isTwoColumn }) =>
+    isTwoColumn ? "1fr 1fr" : "1fr"};
   gap: 30px;
   align-items: flex-start;
   animation: ${fadeIn} 0.5s ease;
@@ -195,7 +202,8 @@ const Select = styled.select<{ error?: boolean }>`
   width: 100%;
   padding: 16px 18px;
   margin: 14px 0;
-  border: 1.8px solid ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
+  border: 1.8px solid
+    ${({ error }) => (error ? "#ff4d4d" : "rgba(77,166,255,0.25)")};
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
   color: #e0f2ff;
@@ -206,6 +214,10 @@ const Select = styled.select<{ error?: boolean }>`
     border-color: ${({ error }) => (error ? "#ff4d4d" : "#4da6ff")};
     box-shadow: 0 0 10px rgba(77, 166, 255, 0.3);
   }
+`;
+
+const SpinningLoader = styled(Loader2)`
+  animation: ${spin} 1s linear infinite;
 `;
 
 const Button = styled.button<{ loading?: boolean }>`
@@ -291,7 +303,6 @@ const ModalBox = styled.div`
     margin-bottom: 32px;
   }
 `;
-
 
 // ================== Main Component ==================
 const CreateAgents: React.FC = () => {
@@ -477,9 +488,9 @@ const CreateAgents: React.FC = () => {
                       }
                     >
                       <option value="">Select Industry Field</option>
-                      {Object.values(BusinessType).map((field) => (
-                        <option key={field} value={field}>
-                          {field}
+                      {Object.entries(BusinessType).map(([key, value]) => (
+                        <option key={key} value={value}>
+                          {key}
                         </option>
                       ))}
                     </Select>
@@ -497,7 +508,7 @@ const CreateAgents: React.FC = () => {
                 >
                   {loadingCreate ? (
                     <>
-                      <Loader2 size={18} className="animate-spin" /> Creating...
+                      <SpinningLoader size={18} /> Creating...
                     </>
                   ) : (
                     "Continue →"
@@ -507,7 +518,10 @@ const CreateAgents: React.FC = () => {
             ) : (
               <>
                 <Card>
-                  <h3>You have successfully craeted your agents. Now lets input your business data for accurate response</h3>
+                  <h3>
+                    You have successfully created your agents. Now lets input
+                    your business data for accurate response
+                  </h3>
                   <InfoGrid>
                     <InfoItem>
                       <Building2 size={18} />
@@ -598,8 +612,7 @@ const CreateAgents: React.FC = () => {
                   >
                     {loadingUpload ? (
                       <>
-                        <Loader2 size={18} className="animate-spin" />{" "}
-                        Deploying...
+                        <SpinningLoader size={18} /> Deploying...
                       </>
                     ) : (
                       "Deploy Agent →"
