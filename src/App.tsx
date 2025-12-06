@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import ForgotPassword from './pages/ForgotPassword';
 import OwnerAgentPage from './pages/OwnerAgentPage';
 import CustomerAgentPage from './pages/CustomerAgentPage';
 import AgriculturePage from './pages/AgriculturePage';
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<AuthenticatedUserRedirect><LoginPage /></AuthenticatedUserRedirect>} />
         <Route path="/signup" element={<AuthenticatedUserRedirect><SignUpPage /></AuthenticatedUserRedirect>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<Navigate to="/landing#what-we-offer" replace />} />
         <Route path="/owner-agent" element={<OwnerAgentPage />} />
         <Route path="/customer-agent" element={<CustomerAgentPage />} />

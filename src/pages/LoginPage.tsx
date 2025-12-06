@@ -407,7 +407,7 @@ const LoginPage: React.FC = () => {
               </form>
 
               <ForgotPasswordLink>
-                <a href="#">Forgot password?</a>
+                <Link to="/forgot-password">Forgot password?</Link>
               </ForgotPasswordLink>
 
               <Divider>
