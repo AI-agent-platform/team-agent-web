@@ -136,7 +136,7 @@ const Footer: React.FC = () => {
       </Background>
 
       <Section>       
-        <Legal>© 2023 All rights reserved</Legal>
+        <Legal>© 2024 All rights reserved</Legal>
       </Section>
     </FooterWrapper>
   );
