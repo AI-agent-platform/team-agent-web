@@ -208,6 +208,24 @@ const Select = styled.select<{ error?: boolean }>`
   background: rgba(255, 255, 255, 0.05);
   color: #e0f2ff;
   transition: 0.3s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Try to ensure dropdown options are readable on dark theme */
+  option {
+    background: #0e1a26; /* dark dropdown background */
+    color: #e0f2ff; /* light text */
+  }
+
+  option[disabled] {
+    color: #9eaec6;
+  }
+
+  /* Windows/IE/Edge expand arrow color tweak */
+  &::-ms-expand {
+    filter: invert(1) opacity(0.9);
+  }
 
   &:focus {
     outline: none;
