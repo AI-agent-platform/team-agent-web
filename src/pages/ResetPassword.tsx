@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
+import { resetPassword } from "../api/auth-api";
 import loginImage from "../Assets/authentication/login.webp";
 
 const PageContainer = styled.div`
@@ -160,33 +161,47 @@ const Message = styled.div`
   font-size: 0.95rem;
 `;
 
-const ForgotPassword: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [isPending, setIsPending] = useState(false);
+const ResetPassword: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [token, setToken] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const t = params.get("token");
+    setToken(t);
+  }, [location.search]);
+
+  const validate = () => {
+    if (!password || password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return false;
+    }
+    if (!token) {
+      toast.error("Missing reset token");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     setIsPending(true);
-
     try {
-      const res = await fetch(`${process.env.REACT_APP_NEST_API}/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error(data?.message || "Request failed");
-      }
-
-      toast.success("If an account exists for that email, a reset link has been sent.");
+      await resetPassword({ token: token as string, password });
+      toast.success("Password reset successfully. You can now sign in.");
       navigate("/login");
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || "Failed to send reset email");
+      toast.error(err?.response?.data?.message || err?.message || "Reset failed");
     } finally {
       setIsPending(false);
     }
@@ -199,26 +214,40 @@ const ForgotPassword: React.FC = () => {
         <ContentWrapper>
           <FormSection>
             <Card>
-            <Title>Reset Your Password</Title>
-            <Subtitle>Enter the email associated with your account</Subtitle>
+              <Title>Set a New Password</Title>
+              <Subtitle>Use the link you received to set a new password</Subtitle>
 
-            <form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label>Email Address</Label>
-                <Input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </FormGroup>
+              <form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <Label>New Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Minimum 8 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </FormGroup>
 
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Sending..." : "Send Reset Link"}
-              </Button>
-            </form>
-           
+                <FormGroup>
+                  <Label>Confirm Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </FormGroup>
+
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Updating..." : "Set Password"}
+                </Button>
+              </form>
+
+              <Message>
+                Remembered your password? <Link to="/login">Sign in</Link>
+              </Message>
             </Card>
           </FormSection>
         </ContentWrapper>
@@ -229,4 +258,4 @@ const ForgotPassword: React.FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

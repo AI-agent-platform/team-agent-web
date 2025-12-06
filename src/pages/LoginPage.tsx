@@ -363,8 +363,6 @@ const LoginPage: React.FC = () => {
               <Title>Welcome Back</Title>
               <Subtitle>Sign in to your account</Subtitle>
 
-              {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-
               <form onSubmit={handleSubmit}>
                 <FormGroup>
                   <Label>Email Address</Label>
