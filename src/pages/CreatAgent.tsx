@@ -615,7 +615,7 @@ const CreateAgents: React.FC = () => {
                         <SpinningLoader size={18} /> Deploying...
                       </>
                     ) : (
-                      "Deploy Agent →"
+                      "Deploy Agent"
                     )}
                   </Button>
                 </Card>
@@ -641,7 +641,7 @@ const CreateAgents: React.FC = () => {
               Your AI agent is now fully deployed. Check your email for API
               credentials and integration instructions.
             </p>
-            <Button onClick={() => navigate("/")}>Go to Dashboard →</Button>
+            <Button onClick={() => navigate("/")}>Go to Dashboard</Button>
           </ModalBox>
         </ModalOverlay>
       )}

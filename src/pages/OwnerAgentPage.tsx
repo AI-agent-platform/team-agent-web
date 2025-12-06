@@ -2,19 +2,20 @@
 import { motion, /*AnimatePresence*/ } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-// import OwnerAgentImg from "../Assets/what-we-offer/owner.jpg";
+import OverallImg from "../Assets/Overall.jpg";
 import {
   BarChart3,
   Bot,
   TrendingUp,
   MessageSquare,
   Settings,
-  Shield
+  Shield,
+  Home
 } from "lucide-react";
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
+  background: #beeaefff;
   position: relative;
   overflow-x: hidden;
 `;
@@ -39,54 +40,57 @@ const Logo = styled.div`
   font-size: 1.4rem;
   font-weight: 700;
   color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
-const BackButton = styled(motion.button)`
-  background: #6366f1;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+const HomeIconButton = styled(motion.div)`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
   transition: all 0.3s ease;
 
   &:hover {
-    background: #4f46e5;
-    transform: translateY(-1px);
+    transform: scale(1.1);
   }
 `;
 
+const AnimatedBotIcon = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #6366f1;
+`;
+
 const HeroSection = styled.section`
-  padding: 120px 5% 80px;
+  padding: 150px 5% 80px;
   max-width: 1200px;
   margin: 0 auto;
 `;
 
-const HeroGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: center;
-  
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    text-align: center;
-  }
-`;
-
 const HeroContent = styled.div`
   max-width: 500px;
+  max-width:  100%;
+  width: 100%;
+  text-align: center;
 `;
 
 const HeroTitle = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 800;
-  color: #0f172a;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  
+
+  @media (min-width: 768px) {
+    font-size: 4rem;
+  }
 `;
 
 const HeroSubtitle = styled(motion.p)`
@@ -94,91 +98,38 @@ const HeroSubtitle = styled(motion.p)`
   color: #64748b;
   line-height: 1.7;
   margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const HeroButton = styled(motion.button)`
-  background: #6366f1;
+  background: #54559fff;
   color: white;
   border: none;
   padding: 14px 24px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background: #4f46e5;
+    background: #675df8ff;
     transform: translateY(-2px);
   }
 `;
 
 const HeroVisual = styled(motion.div)`
+  margin-top: 3rem;
   background: white;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
-const MockupCard = styled.div`
-  background: #f1f5f9;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: between;
-    margin-bottom: 1rem;
-    
-    .title {
-      font-weight: 600;
-      color: #1e293b;
-    }
-    
-    .status {
-      background: #10b981;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      margin-left: auto;
-    }
-  }
-  
-  .content {
-    color: #64748b;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-`;
-
-const StatsRow = styled.div`
-  display: flex;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  
-  .stat {
-    text-align: left;
-    
-    .number {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #6366f1;
-    }
-    
-    .label {
-      font-size: 0.6rem;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-`;
 
 const Section = styled.section`
   padding: 80px 5%;
@@ -186,13 +137,15 @@ const Section = styled.section`
   margin: 0 auto;
 `;
 
-const SectionTitle = styled(motion.h2)`
+const SectionTitleBase = styled(motion.h2)`
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 700;
   color: #0f172a;
   text-align: center;
   margin-bottom: 3rem;
 `;
+
+const SectionTitle = SectionTitleBase;
 
 const FeaturesGrid = styled.div`
   display: grid;
@@ -224,6 +177,8 @@ const FeatureIcon = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
   color: #6366f1;
   
   svg {
@@ -245,153 +200,133 @@ const FeatureDescription = styled.p`
   font-size: 0.95rem;
 `;
 
-const MetricsSection = styled.section`
-  padding: 80px 5%;
-  background: white;
-`;
-
-const MetricsContainer = styled.div`
-  max-width: 1000px;
-  margin: 0 auto;
-  text-align: center;
-`;
-
-const MetricsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
-  margin-top: 4rem;
-`;
-
-const MetricCard = styled(motion.div)`
-  text-align: center;
-`;
-
-const MetricNumber = styled.div`
-  font-size: 3rem;
-  font-weight: 800;
-  color: #6366f1;
-  margin-bottom: 0.5rem;
-`;
-
-const MetricLabel = styled.div`
-  color: #64748b;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 00;
-`;
 
 const ProcessSection = styled.section`
-  padding: 80px 5%;
-  background: #f8fafc;
+  padding: 5rem 2rem 6rem 2rem;
+  background: #eff5f2ff;
 `;
 
 const ProcessContainer = styled.div`
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
 `;
 
 const ProcessTimeline = styled.div`
   position: relative;
   margin-top: 4rem;
+  padding: 3rem 0;
+  height: 450px;
+`;
+
+const RoadPath = styled.svg`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
   
-  &::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e2e8f0;
-    transform: translateX(-50%);
-    
-    @media (max-width: 768px) {
-      left: 20px;
-    }
+  @media (max-width: 768px) {
+    display: none;
   }
+`;
+
+const AnimatedPath = styled(motion.path)`
+  fill: none;
+  stroke: #1e293b;
+  stroke-width: 70;
+  stroke-linecap: round;
+`;
+
+const DashedPath = styled(motion.path)`
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 4;
+  stroke-dasharray: 20, 15;
+  stroke-linecap: round;
 `;
 
 const ProcessStep = styled(motion.div)`
-  position: relative;
-  margin-bottom: 4rem;
+  position: absolute;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  
-  &:nth-child(even) {
-    flex-direction: row-reverse;
-    
-    .content {
-      text-align: right;
-    }
-    
-    @media (max-width: 768px) {
-      flex-direction: row;
-      
-      .content {
-        text-align: left;
-      }
-    }
-  }
+  z-index: 2;
   
   @media (max-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
+    position: relative;
+    margin-bottom: 3rem;
   }
 `;
 
-const StepNumber = styled.div`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  background: #6366f1;
+const StepNumber = styled(motion.div)`
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-weight: 700;
-  z-index: 10;
+  font-size: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border: 5px solid white;
+  margin-bottom: 1rem;
+  position: relative;
+  
+  svg {
+    width: 45px;
+    height: 45px;
+  }
   
   @media (max-width: 768px) {
-    position: static;
-    transform: none;
-    margin-right: 1.5rem;
-    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    
+    svg {
+      width: 35px;
+      height: 35px;
+    }
   }
 `;
 
-const StepContent = styled.div`
+const StepContent = styled(motion.div)`
   background: white;
   border-radius: 12px;
-  padding: 2rem;
-  width: calc(50% - 2rem);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  padding: 1rem 1.5rem;
+  max-width: 250px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  text-align: center;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    border-color: #eeeef5ff;
+  }
   
   @media (max-width: 768px) {
-    width: 100%;
+    max-width: 100%;
   }
 `;
 
 const StepTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #0f172a;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
 `;
 
 const StepDescription = styled.p`
   color: #64748b;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  line-height: 1.5;
+  font-size: 0.85rem;
 `;
 
 const CTASection = styled.section`
   padding: 80px 5%;
-  background: #6366f1;
+  background: #a7a7edff;
   color: white;
   text-align: center;
 `;
@@ -413,10 +348,10 @@ const CTASubtitle = styled(motion.p)`
 
 const CTAButton = styled(motion.button)`
   background: white;
-  color: #6366f1;
+  color: #5152b3ff;
   border: none;
   padding: 16px 32px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -434,42 +369,36 @@ const OwnerAgentPage = () => {
   const features = [
     {
       icon: BarChart3,
-      title: "Business Analytics",
-      description: "Real-time insights into business performance with comprehensive analytics dashboard and reporting tools."
+      title: "Context-Aware Business Understanding",
+      description: "Learns internal workflows, product details, pricing, policies, and operational rules from curated dataset."
     },
     {
       icon: Bot,
-      title: "Smart Automation",
-      description: "Intelligent automation of routine tasks, workflows, and business processes to boost productivity."
+      title: "Automated Decision Support",
+      description: "Provides support for inventory restocking, pricing adjustments, sales forecasting, and workflow optimization based on historical and real-time data."
     },
     {
       icon: TrendingUp,
-      title: "Performance Tracking",
-      description: "Monitor key performance indicators and get actionable insights to drive business growth."
+      title: "RAG-Based Knowledge Retrieval",
+      description: "Retrieves the most relevant business documents, policies, and data using a Retrieval-Augmented Generation (RAG) pipeline."
     },
     {
       icon: MessageSquare,
-      title: "Communication Hub",
-      description: "Centralized communication platform for seamless interaction between AI and business owners."
+      title: "Natural Language Interaction",
+      description: "Business owners can communicate with the agent in plain language and, Can answer business-related questions, interpret queries, and provide actionable insights instantly."
     },
     {
       icon: Settings,
-      title: "System Integration",
-      description: "Connect all your business tools and systems for unified management and streamlined operations."
+      title: "Easy Customization Without Technical Knowledge",
+      description: "Business owners can modify rules, intents, and tasks through simple guided prompts. No coding or machine learning expertise required."
     },
     {
       icon: Shield,
-      title: "Security & Compliance",
-      description: "Enterprise-grade security measures to protect your business data and ensure compliance."
+      title: "Secure and Private Local Processing",
+      description: "SME data is processed privately through a local fine-tuned model. Sensitive business details never leave the enterprise environment."
     }
   ];
 
-  const metrics = [
-    { number: "99.9%", label: "Uptime" },
-    { number: "24/7", label: "Monitoring" },
-    { number: "50%", label: "Time Saved" },
-    { number: "100%", label: "Automated" }
-  ];
 
   const processSteps = [
     {
@@ -493,102 +422,90 @@ const OwnerAgentPage = () => {
   return (
     <PageContainer>
       <NavBar>
-        <Logo>Owner Agent</Logo>
-        <BackButton
+        <Logo>
+          <AnimatedBotIcon
+            animate={{
+              rotate: [0, 10, -10, 10, 0],
+              scale: [1, 1.1, 1.1, 1.1, 1]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 3
+            }}
+          >
+            <Bot size={28} />
+          </AnimatedBotIcon>
+          Owner Agent
+        </Logo>
+        <HomeIconButton
           onClick={() => navigate('/landing#what-we-offer')}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
-          Back to Home
-        </BackButton>
+          <Home size={24} color="#000000" />
+        </HomeIconButton>
       </NavBar>
 
       <HeroSection>
-        <HeroGrid>
-          <HeroContent>
-            <HeroTitle
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              About Owner Agent
-            </HeroTitle>
+  <HeroContent>
+    <HeroTitle
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      About Owner Agent
+    </HeroTitle>
 
-            <HeroSubtitle
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Your intelligent business partner that handles communication, updates, and optimization
-              to keep your business running at peak efficiency. Transform your operations with AI-powered insights.
-            </HeroSubtitle>
+    <HeroSubtitle
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    >
+      Your intelligent business partner that handles communication, updates, and optimization
+      to keep your business running at peak efficiency. Transform your operations with AI-powered insights.
+    </HeroSubtitle>
 
-            <HeroButton
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                const section = document.getElementById("how-it-works");
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-              Learn more
-            </HeroButton>
+    <HeroButton
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.4 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => {
+        const section = document.getElementById("how-it-works");
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      }}
+    >
+      Learn more
+    </HeroButton>
+  </HeroContent>
 
-          </HeroContent>
+  <HeroVisual
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1.05 }}
+    transition={{ duration: 1, delay: 0.3 }}
+  >
+    <img
+      src={OverallImg}
+      alt="Dashboard Preview"
+      className="w-full h-auto max-w-2xl mx-auto drop-shadow-xl rounded-xl"
+    />
+  </HeroVisual>
+</HeroSection>
 
-          <HeroVisual
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
+  
+        <Section>
+          <SectionTitle
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <MockupCard>
-              <div className="header">
-                <span className="title">Business Dashboard</span>
-                <span className="status">Connected</span>
-              </div>
-              <div className="content">
-                Real-time monitoring of all business operations with intelligent insights and automated reporting.
-              </div>
-            </MockupCard>
-
-            <MockupCard>
-              <div className="header">
-                <span className="title">AI Analytics</span>
-                <span className="status">Active</span>
-              </div>
-              <div className="content">
-                Advanced AI algorithms processing your business data to provide actionable recommendations.
-              </div>
-            </MockupCard>
-
-            <StatsRow>
-              <div className="stat">
-                <div className="number">25,000</div>
-                <div className="label">Tasks Automated</div>
-              </div>
-              <div className="stat">
-                <div className="number">99.9%</div>
-                <div className="label">Uptime</div>
-              </div>
-            </StatsRow>
-          </HeroVisual>
-        </HeroGrid>
-      </HeroSection>
-
-      <Section>
-        <SectionTitle
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          Key Features
-        </SectionTitle>
+            Key Features
+          </SectionTitle>
 
         <FeaturesGrid>
           {features.map((feature, index) => {
@@ -613,34 +530,6 @@ const OwnerAgentPage = () => {
         </FeaturesGrid>
       </Section>
 
-      <MetricsSection>
-        <MetricsContainer>
-          <SectionTitle
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            Performance Metrics
-          </SectionTitle>
-
-          <MetricsGrid>
-            {metrics.map((metric, index) => (
-              <MetricCard
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <MetricNumber>{metric.number}</MetricNumber>
-                <MetricLabel>{metric.label}</MetricLabel>
-              </MetricCard>
-            ))}
-          </MetricsGrid>
-        </MetricsContainer>
-      </MetricsSection>
-
       <ProcessSection>
         <ProcessContainer>
           <div id="how-it-works">
@@ -656,21 +545,81 @@ const OwnerAgentPage = () => {
 
 
           <ProcessTimeline>
-            {processSteps.map((step, index) => (
-              <ProcessStep
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
+            <RoadPath viewBox="0 0 1000 300">
+              <AnimatedPath
+                d="M 80 180 Q 200 80, 320 150 Q 440 220, 560 130 Q 680 40, 800 140 Q 880 200, 950 160"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
                 viewport={{ once: true }}
-              >
-                <StepNumber>{index + 1}</StepNumber>
-                <StepContent className="content">
-                  <StepTitle>{step.title}</StepTitle>
-                  <StepDescription>{step.description}</StepDescription>
-                </StepContent>
-              </ProcessStep>
-            ))}
+              />
+              <DashedPath
+                d="M 80 180 Q 200 80, 320 150 Q 440 220, 560 130 Q 680 40, 800 140 Q 880 200, 950 160"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 2, delay: 0.3, ease: "easeInOut" }}
+                viewport={{ once: true }}
+              />
+            </RoadPath>
+            
+            {processSteps.map((step, index) => {
+              const positions = [
+                { left: '10%', top: '42%' },
+                { left: '32%', top: '28%' },
+                { left: '58%', top: '22%' },
+                { left: '83%', top: '35%' }
+              ];
+              
+              const colors = ['#22d3ee', '#a3e635', '#fb923c', '#f472b6'];
+              const IconComponent = [Settings, BarChart3, Bot, TrendingUp][index];
+              
+              return (
+                <ProcessStep
+                  key={index}
+                  style={positions[index]}
+                  initial={{ opacity: 0, scale: 0, y: 50 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.6,
+                    delay: index * 0.3,
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                  viewport={{ once: true }}
+                >
+                  <StepNumber
+                    style={{ background: colors[index], color: 'white' }}
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, -5, 5, -5, 0],
+                      y: [0, -10, 0]
+                    }}
+                    transition={{ 
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.5
+                    }}
+                    whileHover={{ 
+                      scale: 1.2,
+                      rotate: [0, -10, 10, -10, 0],
+                      transition: { duration: 0.5 }
+                    }}
+                  >
+                    <IconComponent />
+                  </StepNumber>
+                  <StepContent
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.3 + 0.3 }}
+                    viewport={{ once: true }}
+                  >
+                    <StepTitle>{step.title}</StepTitle>
+                    <StepDescription>{step.description}</StepDescription>
+                  </StepContent>
+                </ProcessStep>
+              );
+            })}
           </ProcessTimeline>
         </ProcessContainer>
       </ProcessSection>
@@ -690,7 +639,7 @@ const OwnerAgentPage = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Join thousands of businesses already using Owner Agent to streamline operations and boost productivity.
+          Join our framework to generate your own AI-powered Owner Agent and revolutionize your business operations today.
         </CTASubtitle>
         <CTAButton
           whileHover={{ scale: 1.02 }}

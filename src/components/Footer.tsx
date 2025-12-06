@@ -137,17 +137,17 @@ const Footer: React.FC = () => {
 
       <Section>
         <Socials>
-          <li><a className="fa-brands fa-facebook" /></li>
-          <li><a className="fa-brands fa-twitter" /></li>
-          <li><a className="fa-brands fa-linkedin" /></li>
-          <li><a className="fa-brands fa-instagram" /></li>
+          <li><a className="fa-brands fa-facebook" href="https://facebook.com" aria-label="Facebook">Facebook</a></li>
+          <li><a className="fa-brands fa-twitter" href="https://twitter.com" aria-label="Twitter">Twitter</a></li>
+          <li><a className="fa-brands fa-linkedin" href="https://linkedin.com" aria-label="LinkedIn">LinkedIn</a></li>
+          <li><a className="fa-brands fa-instagram" href="https://instagram.com" aria-label="Instagram">Instagram</a></li>
         </Socials>
         <Links>
-          <li><a>Home</a></li>
-          <li><a>About</a></li>
-          <li><a>Services</a></li>
-          <li><a>Team</a></li>
-          <li><a>Contact</a></li>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
         </Links>
         <Legal>© 2023 All rights reserved</Legal>
       </Section>
