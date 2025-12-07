@@ -32,8 +32,16 @@ const GridContainer = styled.div`
   padding: 2rem;
   align-items: start;
 
+  /* On small screens switch to a horizontal scrollable row with compact items */
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 `;
 
@@ -42,7 +50,7 @@ const GridItem = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 60%;
+  max-width: 300px;
   padding: 1.5rem;
   border-radius: 12px;
   background-color: #fff;
@@ -74,6 +82,14 @@ const GridItem = styled(motion.div)`
   &:hover .more-details {
     max-height: 200px;
     opacity: 1;
+  }
+
+  /* Compact fixed-width items on small screens so they lay out horizontally */
+  @media (max-width: 768px) {
+    flex: 0 0 260px;
+    width: 260px;
+    padding: 1rem;
+    margin-bottom: 0;
   }
 `;
 
