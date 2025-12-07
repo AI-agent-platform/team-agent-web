@@ -42,7 +42,7 @@ export async function uploadFile(payload: FileUploadPayload, token?: string) {
   formData.append("business_uuid", payload.business_uuid);
 
   const { data } = await axios.post(
-    `${FileUploadUrl}/`,
+    `${FileUploadUrl}`,
     formData,
     {
       headers: {
