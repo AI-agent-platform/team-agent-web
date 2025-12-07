@@ -10,13 +10,13 @@ img {
 }
 .App {
   min-height: 100vh;
-  width: 85vw;
-  max-width: 1900px;
-  margin: 0rem auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  margin: 0 auto;
 }
-body {
-  max-width: 100%;
-  overflow-x: hidden;
+html, body, #root {
+  overflow-x: hidden; /* prevent horizontal scrolling from children */
 }
 .home-container {
   background-color: #99b5bf;
@@ -72,11 +72,13 @@ nav {
   position: relative;
   padding-top: 3rem;
   margin-bottom: 60px;
+  overflow: hidden; /* contain absolutely positioned images */
 }
 .home-bannerImage-container {
   position: absolute;
   top: -100px;
-  right: -170px;
+  right: 0;
+  transform: translateX(20%); /* visual offset without enlarging page width */
   z-index: -2;
   max-width: 700px;
 }
@@ -134,10 +136,12 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden; /* contain decorative background images */
 }
 .about-background-image-container {
   position: absolute;
-  left: -150px;
+  left: 0;
+  transform: translateX(-20%);
   z-index: -2;
 }
 .about-section-image-container {
@@ -186,9 +190,9 @@ nav {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
-  margin-left: 4rem;
-  margin-right: 4rem;
+  padding: 0 1rem; /* use padding instead of large fixed margins */
+  width: 100%;
+  box-sizing: border-box;
 }
 .contact-form-container {
   background-color: white;
@@ -330,7 +334,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 @media (max-width: 1000px) {
@@ -356,7 +360,8 @@ nav {
     display: flex;
   }
   .home-bannerImage-container {
-    max-width: 450px;
+    max-width: 420px;
+    transform: translateX(10%);
   }
   .home-banner-container,
   .about-section-container {
@@ -446,6 +451,84 @@ nav {
     max-width: 95vw;
   }
   
+}
+
+/* Additional smaller breakpoints to reduce font sizes, images and spacing */
+@media (max-width: 600px) {
+  :root {
+    --gutter: 0.75rem;
+  }
+  .App {
+    padding: 0 0.75rem;
+  }
+  .primary-heading {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+  .primary-text {
+    font-size: clamp(0.9rem, 3.5vw, 1.15rem);
+  }
+  .primary-button, .secondary-button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.25rem;
+  }
+  .home-bannerImage-container, .about-section-image-container, .home-image-section {
+    max-width: 320px;
+    top: -50px;
+  }
+  .about-background-image-container, .home-bannerImage-container {
+    transform: translateX(10%);
+  }
+}
+
+@media (max-width: 420px) {
+  .primary-heading {
+    font-size: clamp(1.3rem, 7vw, 1.8rem);
+  }
+  .primary-text {
+    font-size: clamp(0.85rem, 4.5vw, 1rem);
+  }
+  .navbar-links-container a {
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+  }
+  .footer-wrapper {
+    margin: 3rem 0rem;
+    flex-direction: column;
+  }
+}
+
+/* Broad small-screen typography reductions to affect styled-components too */
+@media (max-width: 600px) {
+  html { font-size: 14px; }
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.2rem !important; }
+  h4, h5, h6 { font-size: 1rem !important; }
+  p, a, li, span, small, label { font-size: 0.95rem !important; }
+  button, input, textarea { font-size: 0.95rem !important; }
+  .primary-heading { font-size: 1.8rem !important; }
+  .primary-text { font-size: 1rem !important; }
+  .primary-button, .secondary-button { font-size: 0.95rem !important; padding: 0.5rem 1rem !important; }
+  .home-bannerImage-container, .about-section-image-container, .home-image-section { max-width: 300px !important; }
+}
+
+@media (max-width: 420px) {
+  html { font-size: 13px; }
+  h1 { font-size: 1.4rem !important; }
+  h2 { font-size: 1.2rem !important; }
+  p, a, li, span, small, label { font-size: 0.9rem !important; }
+  button, input, textarea { font-size: 0.9rem !important; }
+  .primary-button, .secondary-button { font-size: 0.9rem !important; padding: 0.45rem 0.9rem !important; }
+}
+
+/* Make sure large fixed margins don't force horizontal scroll */
+@media (max-width: 768px) {
+  [class*="margin-left"], [class*="margin-right"], .home-container, .contact-page-wrapper {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
 }
 @media (max-width: 600px) {
   .home-bannerImage-container,

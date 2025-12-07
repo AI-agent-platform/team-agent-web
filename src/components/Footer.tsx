@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const FooterWrapper = styled.footer`
   position: relative;
@@ -135,9 +135,7 @@ const Footer: React.FC = () => {
         </svg>
       </Background>
 
-      <Section>       
-        <Legal>© 2024 All rights reserved</Legal>
-      </Section>
+      <Section></Section>
     </FooterWrapper>
   );
 };
