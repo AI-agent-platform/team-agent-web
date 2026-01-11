@@ -9,7 +9,7 @@ import {
 } from "./dto/agent.dto";
 
 const NestBaseUrl = process.env.REACT_APP_NEST_API;
-const FileUploadUrl = process.env.FAST_API_FILE_UPLOAD_URL || 'https://fastapi-rag-service-iuxrsvfyvq-uc.a.run.app/v1/documents/ingest/csv';
+const FileUploadUrl = process.env.FAST_API_FILE_UPLOAD_URL || 'https://fastapi-rag-service-4hxlkozpuq-uc.a.run.app/v1/documents/ingest/csv';
 const API_URL = `${NestBaseUrl}/business`;
 const DjangoBaseUrl = process.env.REACT_APP_DJANGO_API;
 
