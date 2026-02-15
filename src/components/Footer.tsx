@@ -311,7 +311,7 @@ const Footer: React.FC = () => {
       </Inner>
 
       <FooterBottom>
-        <Legal>© {new Date().getFullYear()} Agent AI </Legal>
+        <Legal>© {new Date().getFullYear()} Agent AI dev</Legal>
         
       </FooterBottom>
     </FooterWrapper>
